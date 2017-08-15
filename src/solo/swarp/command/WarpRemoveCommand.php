@@ -14,7 +14,7 @@ class WarpRemoveCommand extends SWarpCommand{
   private $owner;
 
   public function __construct(SWarp $owner){
-    parent::__construct("워프제거", "워프를 제거합니다.", "/워프제거 <워프명>");
+    parent::__construct("워프삭제", "워프를 삭제합니다.", "/워프삭제 <워프명>");
     $this->setPermission("swarp.command.remove");
 
     $this->owner = $owner;
