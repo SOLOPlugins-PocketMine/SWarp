@@ -67,7 +67,8 @@ class SWarp extends PluginBase{
         "WarpListCommand",
         "WarpOptionCommand",
         "WarpPermissionCommand",
-        "WarpRemoveCommand"
+        "WarpRemoveCommand",
+        "WorldMoveCommand"
       ] as $class){
         $class = "\\solo\\swarp\\command\\" . $class;
         $this->getServer()->getCommandMap()->register("swarp", new $class($this));

@@ -74,10 +74,6 @@ class WarpListCommand extends SWarpCommand{
       }
       $sender->sendMessage($message);
     }
-
-    $warps = $this->owner->getAllWarp();
-    //$sender->sendMessage(implode(", ", array_map(function($warp) use ($sender){ return ($sender->hasPermission($warp->getPermission()) ? "" : "§c") . $warp->getName() . "§f"; }, $warps)));
-    //$sender->sendMessage(SWarp::$prefix . "총 " . count($warps) . "개의 워프가 존재합니다.");
     return true;
   }
 }

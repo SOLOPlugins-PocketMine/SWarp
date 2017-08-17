@@ -1,6 +1,6 @@
 name: SWarp
 author: solo
-version: 0.1.0
+version: 0.1.1
 api:
 - 3.0.0
 - 3.0.0-ALPHA1
@@ -42,4 +42,6 @@ permissions:
           swarp.command.setpermission:
             default: op
           swarp.command.remove:
+            default: op
+          swarp.command.worldmove:
             default: op
