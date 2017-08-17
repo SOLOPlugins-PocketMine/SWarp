@@ -36,17 +36,7 @@ class WarpOptionCommand extends SWarpCommand{
               ],
               [
                 "type" => "rawtext",
-                "name" => "추가/제거",
-                "optional" => true
-              ],
-              [
-                "type" => "rawtext",
-                "name" => "옵션",
-                "optional" => true
-              ],
-              [
-                "type" => "rawtext",
-                "name" => "옵션값",
+                "name" => "옵션...",
                 "optional" => true
               ]
             ]
@@ -61,8 +51,7 @@ class WarpOptionCommand extends SWarpCommand{
       $sender->sendMessage(SWarp::$prefix . "이 명령을 실행할 권한이 없습니다.");
       return true;
     }
-    // TODO
-    if(!isset($args[2])){
+    if(!isset($args[1])){ // at least
       $sender->sendMessage(SWarp::$prefix . $this->getUsage() . " - " . $this->getDescription());
       $sender->sendMessage(SWarp::$prefix . "사용 가능한 옵션 : " . implode(", ", array_keys($this->owner->getWarpOptionFactory()->getAllWarpOptions())));
       return true;
@@ -89,6 +78,9 @@ class WarpOptionCommand extends SWarpCommand{
     foreach($warp->getOptions() as $option){
       $sender->sendMessage(SWarp::$prefix . "* " . $option->__toString());
     }
+
+    $this->owner->save();
+    $this->owner->getShortcutManager()->updateShortcut(); // send command data via shortcutmanager TODO: optimize
     return true;
   }
 }

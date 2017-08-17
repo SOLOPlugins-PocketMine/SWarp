@@ -20,12 +20,17 @@ class SWarp extends PluginBase{
 
 
 
+  /** @var Config */
+  private $config;
 
   /** @var WarpOptionFactory */
   private $warpOptionFactory;
 
   /** @var TitleManager */
   private $titleManager;
+
+  /** @var ShortcutManager */
+  private $shortcutManager;
 
   /** @var Config */
   private $warpsConfig;
@@ -41,24 +46,32 @@ class SWarp extends PluginBase{
   }
 
   public function onEnable(){
+    @mkdir($this->getDataFolder());
+    $this->saveResource("setting.yml");
+    $this->config = new Config($this->getDataFolder() . "setting.yml", Config::YAML);
+
     $this->warpOptionFactory = new WarpOptionFactory($this);
+
+    $this->shortcutManager = new ShortcutManager($this);
 
     $this->titleManager = new TitleManager($this);
 
     $this->load();
 
-    foreach([
-      "WarpCommand",
-      "WarpCreateCommand",
-      "WarpDescriptionCommand",
-      "WarpInfoCommand",
-      "WarpListCommand",
-      "WarpOptionCommand",
-      "WarpPermissionCommand",
-      "WarpRemoveCommand"
-    ] as $class){
-      $class = "\\solo\\swarp\\command\\" . $class;
-      $this->getServer()->getCommandMap()->register("swarp", new $class($this));
+    if($this->config->get("enable-warp-commands", true) === true){
+      foreach([
+        "WarpCommand",
+        "WarpCreateCommand",
+        "WarpDescriptionCommand",
+        "WarpInfoCommand",
+        "WarpListCommand",
+        "WarpOptionCommand",
+        "WarpPermissionCommand",
+        "WarpRemoveCommand"
+      ] as $class){
+        $class = "\\solo\\swarp\\command\\" . $class;
+        $this->getServer()->getCommandMap()->register("swarp", new $class($this));
+      }
     }
   }
 
@@ -76,13 +89,13 @@ class SWarp extends PluginBase{
     return $this->titleManager;
   }
 
+  public function getShortcutManager(){
+    return $this->shortcutManager;
+  }
+
 
   public function addWarp(Warp $warp){
     $this->warps[strtolower($warp->getName())] = $warp;
-
-    foreach($this->getServer()->getOnlinePlayers() as $player){
-      $player->sendCommandData();
-    }
   }
 
   public function getWarp(string $name){
@@ -95,10 +108,6 @@ class SWarp extends PluginBase{
 
   public function removeWarp(string $name){
     unset($this->warps[strtolower($name)]);
-
-    foreach($this->getServer()->getOnlinePlayers() as $player){
-      $player->sendCommandData();
-    }
   }
 
   public function save(){
@@ -117,8 +126,6 @@ class SWarp extends PluginBase{
   }
 
   public function load(){
-    @mkdir($this->getDataFolder());
-
     $this->warpsConfig = new Config($this->getDataFolder() . "warps.yml", Config::YAML);
 
     $warps = [];

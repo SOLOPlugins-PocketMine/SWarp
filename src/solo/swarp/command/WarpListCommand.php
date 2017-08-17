@@ -29,9 +29,11 @@ class WarpListCommand extends SWarpCommand{
         "default" => [
           "input" => [
             "parameters" => [
-              //"type" => "rawtext",
-              //"name" => "페이지",
-              //"optional" => true
+              [
+                "type" => "rawtext",
+                "name" => "페이지",
+                "optional" => true
+              ]
             ]
           ]
         ]
@@ -47,23 +49,22 @@ class WarpListCommand extends SWarpCommand{
 
     $warps = $this->owner->getAllWarp();
 
-    $maxPage = ceil(count($warps) / 5);
-    $page = 1;
-    if(isset($args[0]) && is_numeric($args[0])){
-      $page = max(1, min($maxPage, $args[0]));
-    }
+    $pageHeight = 5;
 
-    $sender->sendMessage("§l==========[ 워프 목록 (전체 " . $maxPage . "페이지 중 " . $page . "페이지" . " ]==========");
+    $maxPage = ceil(count($warps) / $pageHeight);
+    $page = is_numeric($args[0] ?? "default") ? max(1, min($maxPage, intval($args[0]))) : 1;
+
+    $sender->sendMessage("§l==========[ 워프 목록 (전체 " . $maxPage . "페이지 중 " . $page . "페이지) ]==========");
 
     $i = 0;
     foreach($warps as $warp){
-      if($i < $page * 5 - 5){
+      $i++;
+      if($i <= $page * $pageHeight - $pageHeight){
         continue;
       }
-      if($i >= $page * 5){
+      if($i > $page * $pageHeight){
         break;
       }
-      $i++;
       $message = "§7[" . $i . "] " . ($sender->hasPermission($warp->getPermission()) ? "§a" : "§c") . $warp->getName() . "§7";
       if($warp->hasDescription()){
         $message .= "   " . $warp->getDescription();

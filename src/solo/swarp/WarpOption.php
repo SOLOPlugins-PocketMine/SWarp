@@ -10,7 +10,9 @@ abstract class WarpOption{
 
   }
 
-  abstract public function apply(WarpEvent $event);
+  public function apply(WarpEvent $event){
+
+  }
 
   public function yamlSerialize(){
     return [];

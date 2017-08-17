@@ -9,6 +9,8 @@ use pocketmine\level\Position;
 use pocketmine\level\particle\BubbleParticle;
 use pocketmine\math\Vector3;
 
+use solo\swarp\option\ShortcutOption;
+
 class Warp{
 
   public $name;
@@ -104,6 +106,10 @@ class Warp{
 
   public function setOptions(array $options){
     $this->options = $options;
+  }
+
+  public function containsOption(string $optionName){
+    return isset($this->options[$optionName]);
   }
 
   public function removeOption($option){

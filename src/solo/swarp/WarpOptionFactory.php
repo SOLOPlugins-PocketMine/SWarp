@@ -8,6 +8,7 @@ use solo\swarp\option\DepartureParticleOption;
 use solo\swarp\option\DescriptionOption;
 use solo\swarp\option\DestinationParticleOption;
 use solo\swarp\option\RandomDestinationOption;
+use solo\swarp\option\ShortcutOption;
 use solo\swarp\option\SubTitleOption;
 use solo\swarp\option\TitleOption;
 
@@ -34,6 +35,7 @@ class WarpOptionFactory{
       $this->registerWarpOption(CostOption::class);
     }
     $this->registerWarpOption(CooldownOption::class);
+    $this->registerWarpOption(ShortcutOption::class);
   }
 
   public function parseOptions(string $input) : array{

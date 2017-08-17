@@ -88,6 +88,9 @@ class WarpCreateCommand extends SWarpCommand{
     foreach($warp->getOptions() as $option){
       $sender->sendMessage(SWarp::$prefix . "* " . $option->__toString());
     }
+
+    $this->owner->save(); //save data
+    $this->owner->getShortcutManager()->updateShortcut(); // send command data via shortcutmanager TODO: optimize
     return true;
   }
 }

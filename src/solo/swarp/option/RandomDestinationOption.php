@@ -39,10 +39,6 @@ class RandomDestinationOption extends WarpOption{
     ));
   }
 
-  public function apply(WarpEvent $event){
-
-  }
-
   public function __toString(){
     return $this->getName() . " 범위 : " . $this->range;
   }
