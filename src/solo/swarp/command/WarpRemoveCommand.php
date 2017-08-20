@@ -8,6 +8,8 @@ use pocketmine\command\CommandSender;
 use solo\swarp\SWarp;
 use solo\swarp\SWarpCommand;
 use solo\swarp\Warp;
+use solo\sportal\SPortal;
+use pocketmine\level\Position;
 
 class WarpRemoveCommand extends SWarpCommand{
 
@@ -66,6 +68,16 @@ class WarpRemoveCommand extends SWarpCommand{
     $this->owner->removeWarp($warp->getName());
 
     $sender->sendMessage(SWarp::$prefix . "\"" . $warp->getName() . "\" 워프를 제거하였습니다.");
+    
+    if ($this->owner->getServer()->getPluginManager()->getPlugin("SPortal") !== null) {
+     $portalInstance = SPortal::getInstance();
+     $portals= $portalInstance->getAllPortal();
+     foreach ($portals as $portal) {
+      if ($portal->getWarp() === $warpName) {
+       $portalInstance->removePortal(new Position($portal->x, $portal->y, $portal->z, $this->owner->getServer()->getLevelByName($portal->level)));
+      }
+     }
+    }
 
     $this->owner->save(); //save data
     $this->owner->getShortcutManager()->updateShortcut(); // send command data via shortcutmanager TODO: optimize
