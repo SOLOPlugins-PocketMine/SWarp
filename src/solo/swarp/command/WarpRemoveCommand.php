@@ -4,12 +4,12 @@ namespace solo\swarp\command;
 
 use pocketmine\Player;
 use pocketmine\command\CommandSender;
+use pocketmine\level\Position;
 
 use solo\swarp\SWarp;
 use solo\swarp\SWarpCommand;
 use solo\swarp\Warp;
 use solo\sportal\SPortal;
-use pocketmine\level\Position;
 
 class WarpRemoveCommand extends SWarpCommand{
 
@@ -71,7 +71,7 @@ class WarpRemoveCommand extends SWarpCommand{
     
     if ($this->owner->getServer()->getPluginManager()->getPlugin("SPortal") !== null) {
      $portalInstance = SPortal::getInstance();
-     $portals= $portalInstance->getAllPortal();
+     $portals = $portalInstance->getAllPortal();
      foreach ($portals as $portal) {
       if ($portal->getWarp() === $warpName) {
        $portalInstance->removePortal(new Position($portal->x, $portal->y, $portal->z, $this->owner->getServer()->getLevelByName($portal->level)));
