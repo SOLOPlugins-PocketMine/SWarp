@@ -54,7 +54,7 @@ class WarpListCommand extends SWarpCommand{
     $maxPage = ceil(count($warps) / $pageHeight);
     $page = is_numeric($args[0] ?? "default") ? max(1, min($maxPage, intval($args[0]))) : 1;
 
-    $sender->sendMessage("§l==========[ 워프 목록 (전체 " . $maxPage . "페이지 중 " . $page . "페이지) ]==========");
+    $sender->sendMessage("§l==========[ 워프 목록 (전체 " . $maxPage . "페이지 중 " . $page . "페이지) ]==========§r");
 
     $i = 0;
     foreach($warps as $warp){
@@ -72,7 +72,7 @@ class WarpListCommand extends SWarpCommand{
         if($warp->hasOption()) $message .= "   " . implode(", ", array_map(function($option){ return $option->__toString() . "§r§7"; }, $warp->getOptions()));
         if($sender->isOp()) $message .= "   (x=" . $warp->getX() . ", y=" . $warp->getY() . ", z=" . $warp->getZ() . ", level=" . $warp->getLevel() . ", permission=" . $warp->getPermission() . ")";
       }
-      $sender->sendMessage($message);
+      $sender->sendMessage($message . "§r");
     }
     return true;
   }
