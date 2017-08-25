@@ -7,9 +7,9 @@ use pocketmine\level\Position;
 use pocketmine\level\particle\DestroyBlockParticle;
 use pocketmine\math\Vector3;
 
-use solo\swarp\WarpEvent;
 use solo\swarp\WarpException;
 use solo\swarp\WarpOption;
+use solo\swarp\event\PlayerWarpEvent;
 
 class DepartureParticleOption extends WarpOption{
 
@@ -21,7 +21,7 @@ class DepartureParticleOption extends WarpOption{
     return "출발지점파티클";
   }
 
-  public function apply(WarpEvent $event){
+  public function apply(PlayerWarpEvent $event){
     $departure = $event->getPlayer();
 
     $departureBlock = $departure->getLevel()->getBlock(new Vector3($departure->getFloorX(), $departure->getFloorY() - 1, $departure->getFloorZ()));

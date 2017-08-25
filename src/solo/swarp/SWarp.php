@@ -107,8 +107,11 @@ class SWarp extends PluginBase{
     return $this->warps;
   }
 
-  public function removeWarp(string $name){
-    unset($this->warps[strtolower($name)]);
+  public function removeWarp($warp){
+    if($warp instanceof Warp){
+      $warp = $warp->getName();
+    }
+    unset($this->warps[strtolower($warp)]);
   }
 
   public function save(){

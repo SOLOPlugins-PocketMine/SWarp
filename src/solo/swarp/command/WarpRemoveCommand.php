@@ -8,6 +8,7 @@ use pocketmine\command\CommandSender;
 use solo\swarp\SWarp;
 use solo\swarp\SWarpCommand;
 use solo\swarp\Warp;
+use solo\swarp\event\WarpRemoveEvent;
 
 class WarpRemoveCommand extends SWarpCommand{
 
@@ -21,9 +22,6 @@ class WarpRemoveCommand extends SWarpCommand{
   }
 
   public function _generateCustomCommandData(Player $player) : array{
-    if(!$player->hasPermission($this->getPermission())){
-      return [];
-    }
     return [
       "aliases" => $this->getAliases(),
       "overloads" => [
@@ -51,7 +49,7 @@ class WarpRemoveCommand extends SWarpCommand{
       return true;
     }
 
-    if(!isset($args[0])){
+    if(empty($args)){
       $sender->sendMessage(SWarp::$prefix . "사용법 : " . $this->getUsage() . " - " . $this->getDescription());
       return true;
     }
@@ -61,6 +59,12 @@ class WarpRemoveCommand extends SWarpCommand{
 
     if(!$warp instanceof Warp){
       $sender->sendMessage(SWarp::$prefix . "\"" . $warpName . "\" 은(는) 존재하지 않는 워프입니다.");
+      return true;
+    }
+    $ev = new WarpRemoveEvent($warp);
+    $this->owner->getServer()->getPluginManager()->callEvent($ev);
+    if($ev->isCancelled()){
+      $sender->sendMessage(SWarp::$prefix . "워프 제거에 실패하였습니다.");
       return true;
     }
     $this->owner->removeWarp($warp->getName());

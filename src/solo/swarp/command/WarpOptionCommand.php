@@ -20,9 +20,6 @@ class WarpOptionCommand extends SWarpCommand{
   }
 
   public function _generateCustomCommandData(Player $player) : array{
-    if(!$player->hasPermission($this->getPermission())){
-      return [];
-    }
     return [
       "aliases" => $this->getAliases(),
       "overloads" => [
@@ -51,7 +48,7 @@ class WarpOptionCommand extends SWarpCommand{
       $sender->sendMessage(SWarp::$prefix . "이 명령을 실행할 권한이 없습니다.");
       return true;
     }
-    if(!isset($args[1])){ // at least
+    if(count($args) < 2){
       $sender->sendMessage(SWarp::$prefix . $this->getUsage() . " - " . $this->getDescription());
       $sender->sendMessage(SWarp::$prefix . "사용 가능한 옵션 : " . implode(", ", array_keys($this->owner->getWarpOptionFactory()->getAllWarpOptions())));
       return true;

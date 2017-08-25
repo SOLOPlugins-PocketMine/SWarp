@@ -8,6 +8,7 @@ use pocketmine\command\CommandSender;
 use solo\swarp\SWarp;
 use solo\swarp\SWarpCommand;
 use solo\swarp\Warp;
+use solo\swarp\event\WarpCreateEvent;
 
 class WarpCreateCommand extends SWarpCommand{
 
@@ -21,9 +22,6 @@ class WarpCreateCommand extends SWarpCommand{
   }
 
   public function _generateCustomCommandData(Player $player) : array{
-    if(!$player->hasPermission($this->getPermission())){
-      return [];
-    }
     return [
       "aliases" => $this->getAliases(),
       "overloads" => [
@@ -48,6 +46,10 @@ class WarpCreateCommand extends SWarpCommand{
   }
 
   public function _execute(CommandSender $sender, string $label, array $args) : bool{
+    if(!$sender instanceof Player){
+      $sender->sendMessage(SWarp::$prefix . "인게임에서만 사용할 수 있습니다.");
+      return true;
+    }
     if(!$sender->hasPermission($this->getPermission())){
       $sender->sendMessage(SWarp::$prefix . "이 명령을 실행할 권한이 없습니다.");
       return true;
@@ -57,7 +59,7 @@ class WarpCreateCommand extends SWarpCommand{
       return true;
     }
 
-    if(!isset($args[0])){
+    if(empty($args)){
       $sender->sendMessage(SWarp::$prefix . "사용법 : " . $this->getUsage() . " - " . $this->getDescription());
       $sender->sendMessage(SWarp::$prefix . "사용 가능한 옵션 : " . implode(", ", array_keys($this->owner->getWarpOptionFactory()->getAllWarpOptions())));
       $sender->sendMessage(SWarp::$prefix . "옵션 사용 예시 : /워프생성 테스트 -비용 1000 -쿨타임 3");
@@ -65,23 +67,31 @@ class WarpCreateCommand extends SWarpCommand{
     }
     $warpName = array_shift($args);
 
+    if($this->owner->getWarp($warpName) instanceof Warp){
+      $sender->sendMessage(SWarp::$prefix . "\"" . $warpName . "\" 은(는) 이미 존재하는 워프 이름입니다.");
+      return true;
+    }
+
+    $warp = new Warp($warpName, $sender->x, $sender->y, $sender->z, $sender->getLevel()->getFolderName());
     try{
       $options = $this->owner->getWarpOptionFactory()->parseOptions(implode(" ", $args));
+      $warp->setOptions($options);
     }catch(\InvalidArgumentException $e){
       $sender->sendMessage(SWarp::$prefix . $e->getMessage());
       return true;
     }
 
-    if($this->owner->getWarp($warpName) instanceof Warp){
-      $sender->sendMessage(SWarp::$prefix . "\"" . $warpName . "\" 은(는) 이미 존재하는 워프 이름입니다.");
+    $ev = new WarpCreateEvent($warp);
+    $this->owner->getServer()->getPluginManager()->callEvent($ev, $sender);
+    if($ev->isCancelled()){
+      $sender->sendMessage(SWarp::$prefix . "워프 생성에 실패하였습니다.");
       return true;
     }
-    $warp = new Warp($warpName, $sender->x, $sender->y, $sender->z, $sender->getLevel()->getFolderName(), $options);
 
+    // register warp
     $this->owner->addWarp($warp);
 
     $sender->sendMessage(SWarp::$prefix . "워프를 생성하였습니다.");
-
     $sender->sendMessage(SWarp::$prefix . "* 워프 이름 : " . $warp->getName());
     $sender->sendMessage(SWarp::$prefix . "* 월드 : " . $warp->getLevel());
     $sender->sendMessage(SWarp::$prefix . "* 좌표 : x=" . $warp->getX() . ", y=" . $warp->getY() . ", z=" . $warp->getZ());

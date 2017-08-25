@@ -2,9 +2,9 @@
 
 namespace solo\swarp\option;
 
-use solo\swarp\WarpEvent;
 use solo\swarp\WarpException;
 use solo\swarp\WarpOption;
+use solo\swarp\event\PlayerWarpEvent;
 
 class CooldownOption extends WarpOption{
 
@@ -26,14 +26,14 @@ class CooldownOption extends WarpOption{
     return "쿨타임";
   }
 
-  public function test(WarpEvent $event){
+  public function test(PlayerWarpEvent $event){
     $name = strtolower($event->getPlayer()->getName());
     if(isset($this->cooldownList[$name]) && time() - $this->cooldownList[$name] < $this->cooldown){
       throw new WarpException("아직 워프할 수 없습니다. 남은 시간 : " . (intval($this->cooldown) - (time() - $this->cooldownList[$name])) . "초");
     }
   }
 
-  public function apply(WarpEvent $event){
+  public function apply(PlayerWarpEvent $event){
     $this->cooldownList[strtolower($event->getPlayer()->getName())] = time();
   }
 

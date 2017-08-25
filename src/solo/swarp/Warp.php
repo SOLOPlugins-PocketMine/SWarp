@@ -9,30 +9,30 @@ use pocketmine\level\Position;
 use pocketmine\level\particle\BubbleParticle;
 use pocketmine\math\Vector3;
 
-use solo\swarp\option\ShortcutOption;
+use solo\swarp\event\PlayerWarpEvent;
+use solo\swarp\event\WarpOptionUpdateEvent;
 
 class Warp{
 
-  public $name;
-  public $x;
-  public $y;
-  public $z;
-  public $level;
+  protected $name;
+  protected $x;
+  protected $y;
+  protected $z;
+  protected $level;
 
   /** @var WarpOption[] */
-  public $options;
+  protected $options;
 
-  public $description = "";
+  protected $description = "";
 
-  public $permission = "swarp.warp.default";
+  protected $permission = "swarp.warp.default";
 
-  public function __construct(string $name, $x, $y, $z, $level, $options = []){
+  public function __construct(string $name, $x, $y, $z, string $level){
     $this->name = strtolower($name);
     $this->x = $x;
     $this->y = $y;
     $this->z = $z;
     $this->level = $level;
-    $this->options = $options;
   }
 
   public function getName() : string{
@@ -60,10 +60,14 @@ class Warp{
     if($level === null){
       throw new WarpException($this->level . " 은 로드되지 않았거나 존재하지 않는 월드입니다.");
     }
-    $event = new WarpEvent($this, $player, new Position($this->x, $this->y, $this->z, $level));
+    $event = new PlayerWarpEvent($this, $player, new Position($this->x, $this->y, $this->z, $level));
 
     foreach($this->options as $option){
       $option->test($event);
+    }
+    Server::getInstance()->getPluginManager()->callEvent($event);
+    if($event->isCancelled()){
+      throw new WarpException("워프에 실패하였습니다.");
     }
 
     foreach($this->options as $option){
@@ -92,12 +96,16 @@ class Warp{
     $this->permission = $permission;
   }
 
-  public function addOption(WarpOption $option){
-    $this->options[$option->getName()] = $option;
+  public function hasOptions(){
+    return count($this->options) > 0;
   }
 
-  public function hasOption(){
-    return count($this->options) > 0;
+  public function hasOption(string $name){
+    return isset($this->options[$name]);
+  }
+
+  public function getOption(stirng $name){
+    return $this->options[$name] ?? null;
   }
 
   public function getOptions(){
@@ -106,17 +114,7 @@ class Warp{
 
   public function setOptions(array $options){
     $this->options = $options;
-  }
-
-  public function containsOption(string $optionName){
-    return isset($this->options[$optionName]);
-  }
-
-  public function removeOption($option){
-    if($option instanceof WarpOption){
-      $option = $option->getName();
-    }
-    unset($this->options[$option]);
+    Server::getInstance()->getPluginManager()->callEvent(new WarpOptionUpdateEvent($this));
   }
 
   public function __toString(){

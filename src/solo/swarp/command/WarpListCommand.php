@@ -20,9 +20,6 @@ class WarpListCommand extends SWarpCommand{
   }
 
   public function _generateCustomCommandData(Player $player) : array{
-    if(!$player->hasPermission($this->getPermission())){
-      return [];
-    }
     return [
       "aliases" => $this->getAliases(),
       "overloads" => [
@@ -69,7 +66,7 @@ class WarpListCommand extends SWarpCommand{
       if($warp->hasDescription()){
         $message .= "   " . $warp->getDescription();
       }else{
-        if($warp->hasOption()) $message .= "   " . implode(", ", array_map(function($option){ return $option->__toString() . "§r§7"; }, $warp->getOptions()));
+        if($warp->hasOptions()) $message .= "   " . implode(", ", array_map(function($option){ return $option->__toString() . "§r§7"; }, $warp->getOptions()));
         if($sender->isOp()) $message .= "   (x=" . $warp->getX() . ", y=" . $warp->getY() . ", z=" . $warp->getZ() . ", level=" . $warp->getLevel() . ", permission=" . $warp->getPermission() . ")";
       }
       $sender->sendMessage($message . "§r");

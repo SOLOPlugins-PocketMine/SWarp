@@ -22,9 +22,6 @@ class WarpCommand extends SWarpCommand{
   }
 
   public function _generateCustomCommandData(Player $player) : array{
-    if(!$player->hasPermission($this->getPermission())){
-      return [];
-    }
     return [
       "aliases" => $this->getAliases(),
       "overloads" => [
@@ -56,21 +53,18 @@ class WarpCommand extends SWarpCommand{
   }
 
   public function _execute(CommandSender $sender, string $label, array $args) : bool{
-    if(!$sender->hasPermission($this->getPermission())){
-      $sender->sendMessage(SWarp::$prefix . "이 명령을 실행할 권한이 없습니다.");
-      return true;
-    }
-
     if(!$sender instanceof Player){
       $sender->sendMessage(SWarp::$prefix . "인게임에서만 사용할 수 있습니다.");
       return true;
     }
-
-    if(!isset($args[0])){
+    if(!$sender->hasPermission($this->getPermission())){
+      $sender->sendMessage(SWarp::$prefix . "이 명령을 실행할 권한이 없습니다.");
+      return true;
+    }
+    if(empty($args)){
       $sender->sendMessage(SWarp::$prefix . "사용법 : " . $this->getUsage() . " - " . $this->getDescription());
       return true;
     }
-
     $warpName = $args[0];
     $warp = $this->owner->getWarp($warpName);
 

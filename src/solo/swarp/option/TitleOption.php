@@ -3,9 +3,9 @@
 namespace solo\swarp\option;
 
 use solo\swarp\SWarp;
-use solo\swarp\WarpEvent;
 use solo\swarp\WarpException;
 use solo\swarp\WarpOption;
+use solo\swarp\event\PlayerWarpEvent;
 
 class TitleOption extends WarpOption{
 
@@ -19,7 +19,7 @@ class TitleOption extends WarpOption{
     return "타이틀";
   }
 
-  public function apply(WarpEvent $event){
+  public function apply(PlayerWarpEvent $event){
     SWarp::getInstance()->getTitleManager()->addTitle($event->getPlayer(), $this->titleMessage);
   }
 

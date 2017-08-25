@@ -20,9 +20,6 @@ class WarpPermissionCommand extends SWarpCommand{
   }
 
   public function _generateCustomCommandData(Player $player) : array{
-    if(!$player->hasPermission($this->getPermission())){
-      return [];
-    }
     return [
       "aliases" => $this->getAliases(),
       "overloads" => [
@@ -55,7 +52,7 @@ class WarpPermissionCommand extends SWarpCommand{
       return true;
     }
 
-    if(!isset($args[1])){
+    if(count($args) < 2){
       $sender->sendMessage(SWarp::$prefix . "사용법 : " . $this->getUsage() . " - " . $this->getDescription());
       $sender->sendMessage(SWarp::$prefix . "* swarp.warp.op - 관리자만 사용가능합니다.");
       $sender->sendMessage(SWarp::$prefix . "* swarp.warp.default - 모든 유저가 사용가능합니다.");

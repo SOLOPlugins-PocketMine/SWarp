@@ -3,9 +3,9 @@
 namespace solo\swarp\option;
 
 use solo\swarp\SWarp;
-use solo\swarp\WarpEvent;
 use solo\swarp\WarpException;
 use solo\swarp\WarpOption;
+use solo\swarp\event\PlayerWarpEvent;
 
 class SubTitleOption extends WarpOption{
 
@@ -19,7 +19,7 @@ class SubTitleOption extends WarpOption{
     return "서브타이틀";
   }
 
-  public function apply(WarpEvent $event){
+  public function apply(PlayerWarpEvent $event){
     SWarp::getInstance()->getTitleManager()->addSubTitle($event->getPlayer(), $this->subTitleMessage);
   }
 

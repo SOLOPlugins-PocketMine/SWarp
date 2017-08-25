@@ -2,15 +2,17 @@
 
 namespace solo\swarp;
 
+use solo\swarp\event\PlayerWarpEvent;
+
 abstract class WarpOption{
 
   abstract public function getName() : string;
 
-  public function test(WarpEvent $event){
+  public function test(PlayerWarpEvent $event){
 
   }
 
-  public function apply(WarpEvent $event){
+  public function apply(PlayerWarpEvent $event){
 
   }
 

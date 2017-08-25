@@ -4,9 +4,9 @@ namespace solo\swarp\option;
 
 use pocketmine\level\Position;
 
-use solo\swarp\WarpEvent;
 use solo\swarp\WarpException;
 use solo\swarp\WarpOption;
+use solo\swarp\event\PlayerWarpEvent;
 
 class RandomDestinationOption extends WarpOption{
 
@@ -29,7 +29,7 @@ class RandomDestinationOption extends WarpOption{
     return "무작위도착지점";
   }
 
-  public function test(WarpEvent $event){
+  public function test(PlayerWarpEvent $event){
     $origin = $event->getDestination();
     $event->setDestination(new Position(
       $origin->getX() + (mt_rand(0, 20000) / 10000 * $this->range - $this->range),
