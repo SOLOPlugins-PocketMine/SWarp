@@ -55,7 +55,7 @@ class Warp{
     return $this->level;
   }
 
-  public function warp(Player $player){
+  public function warp(Player $player, bool $force = false){
     $level = Server::getInstance()->getLevelByName($this->level);
     if($level === null){
       throw new WarpException($this->level . " 은 로드되지 않았거나 존재하지 않는 월드입니다.");
@@ -66,7 +66,7 @@ class Warp{
       $option->test($event);
     }
     Server::getInstance()->getPluginManager()->callEvent($event);
-    if($event->isCancelled()){
+    if($event->isCancelled() && $false !== true){
       throw new WarpException("워프에 실패하였습니다.");
     }
 
