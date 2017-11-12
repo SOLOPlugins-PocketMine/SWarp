@@ -23,7 +23,7 @@ class ShortcutManager implements Listener{
       try{
         if(interface_exists($expectedInterface)){
           $this->availableCommandsPacketId = constant($expectedInterface . "::AVAILABLE_COMMANDS_PACKET");
-          $this->owner->getServer()->getLogger()->debug("[SWarp] detected " . $expectedInterface);
+          $this->owner->getServer()->getLogger()->debug("[SWarp] " . $expectedInterface . " detected");
         }
       }catch(\Throwable $e){
         continue;
