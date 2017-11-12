@@ -77,19 +77,26 @@ class SWarp extends PluginBase{
   public function onDisable(){
     $this->save();
 
+    $this->warpOptionFactory = null;
+    $this->shortcutManager = null;
+    $this->titleManager = null;
     self::$instance = null;
   }
 
-  public function getWarpOptionFactory(){
+  public function getSetting() : Config{
+    return $this->setting;
+  }
+
+  public function getWarpOptionFactory() : WarpOptionFactory{
     return $this->warpOptionFactory;
   }
 
-  public function getTitleManager(){
-    return $this->titleManager;
+  public function getShortcutManager() : ShortcutManager{
+    return $this->shortcutManager;
   }
 
-  public function getShortcutManager(){
-    return $this->shortcutManager;
+  public function getTitleManager() : TitleManager{
+    return $this->titleManager;
   }
 
 
