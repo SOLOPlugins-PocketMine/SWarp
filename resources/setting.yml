@@ -1,2 +1,6 @@
 # If disable this, Commands that are related with Warp are not available
 enable-warp-commands: true
+
+# If enable this, you can use shortcut
+# example > "shop" warp can use as /shop
+use-warp-shortcut: true

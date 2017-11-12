@@ -72,7 +72,6 @@ class WarpRemoveCommand extends SWarpCommand{
     $sender->sendMessage(SWarp::$prefix . "\"" . $warp->getName() . "\" 워프를 제거하였습니다.");
 
     $this->owner->save(); //save data
-    $this->owner->getShortcutManager()->updateShortcut(); // send command data via shortcutmanager TODO: optimize
     return true;
   }
 }

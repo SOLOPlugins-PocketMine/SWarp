@@ -67,5 +67,4 @@ class WorldMoveCommand extends SWarpCommand{
     $sender->sendMessage(SWarp::$prefix . $level->getName() . " 월드로 이동하였습니다.");
     return true;
   }
-
 }

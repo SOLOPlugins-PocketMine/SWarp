@@ -15,21 +15,25 @@ class ShortcutManager implements Listener{
 
     foreach([
       "\\pocketmine\\network\\mcpe\\protocol\\ProtocolInfo",
-      "\\pocketmine\\network\\protocol\\ProtocolInfo"
-    ] as $find){
+      "\\pocketmine\\network\\protocol\\ProtocolInfo",
+      "\\pocketmine\\network\\protocol\\Info"
+    ] as $expectedInterface){
       try{
-        if(interface_exists($find)){
-          $this->availableCommandsPacketId = constant($find . "::AVAILABLE_COMMANDS_PACKET");
+        if(interface_exists($expectedInterface)){
+          $this->availableCommandsPacketId = constant($expectedInterface . "::AVAILABLE_COMMANDS_PACKET");
+          $this->owner->getServer()->getLogger()->debug("[SWarp] detected " . $expectedInterface);
         }
       }catch(\Throwable $e){
         continue;
       }
     }
 
-    $this->owner->getServer()->getPluginManager()->registerEvents($this, $this->owner);
+    if($this->owner->getSetting()->get("use-warp-shortcut", true) === true){
+      $this->owner->getServer()->getPluginManager()->registerEvents($this, $this->owner);
+    }
   }
 
-  public function updateShortcut(){
+  public function handleWarpCreate(WarpCreateEvent $event){
     foreach($this->owner->getServer()->getOnlinePlayers() as $player){
       $player->sendCommandData();
     }
@@ -39,8 +43,7 @@ class ShortcutManager implements Listener{
     $text = $event->getMessage();
     if(substr($text, 0, 1) === '/'){
       $find = substr($text, 1);
-      $warp = $this->owner->getWarp($find);
-      if($warp !== null && $warp->hasOption("쇼트컷")){
+      if($this->owner->getWarp($find) !== null){
         $event->setMessage('/워프 ' . $find); // via warp command
       }
     }
@@ -50,10 +53,7 @@ class ShortcutManager implements Listener{
     if($event->getPacket()->pid() === $this->availableCommandsPacketId){ // AVAILABLE_COMMANDS_PACKET
       $commands = json_decode($event->getPacket()->commands, true);
       foreach($this->owner->getAllWarp() as $warp){
-        if(
-          !isset($commands[$warp->getName()])
-          && $warp->hasOption("쇼트컷")
-        ){
+        if(!isset($commands[$warp->getName()])){
           $warpName = str_replace(['[', ']', '{', '}', ':', '"', '\''], ['', '', '', '', '', '', ''], $warp->getName()); // json syntax
           if(trim($warpName) == ""){
             continue;

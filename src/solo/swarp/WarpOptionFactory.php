@@ -35,7 +35,6 @@ class WarpOptionFactory{
       $this->registerWarpOption(CostOption::class);
     }
     $this->registerWarpOption(CooldownOption::class);
-    $this->registerWarpOption(ShortcutOption::class);
   }
 
   public function parseOptions(string $input) : array{

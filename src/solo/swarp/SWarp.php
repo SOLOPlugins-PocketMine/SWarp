@@ -21,7 +21,7 @@ class SWarp extends PluginBase{
 
 
   /** @var Config */
-  private $config;
+  private $setting;
 
   /** @var WarpOptionFactory */
   private $warpOptionFactory;
@@ -48,7 +48,7 @@ class SWarp extends PluginBase{
   public function onEnable(){
     @mkdir($this->getDataFolder());
     $this->saveResource("setting.yml");
-    $this->config = new Config($this->getDataFolder() . "setting.yml", Config::YAML);
+    $this->setting = new Config($this->getDataFolder() . "setting.yml", Config::YAML);
 
     $this->warpOptionFactory = new WarpOptionFactory($this);
 
@@ -58,21 +58,19 @@ class SWarp extends PluginBase{
 
     $this->load();
 
-    if($this->config->get("enable-warp-commands", true) === true){
-      foreach([
-        "WarpCommand",
-        "WarpCreateCommand",
-        "WarpDescriptionCommand",
-        "WarpInfoCommand",
-        "WarpListCommand",
-        "WarpOptionCommand",
-        "WarpPermissionCommand",
-        "WarpRemoveCommand",
-        "WorldMoveCommand"
-      ] as $class){
-        $class = "\\solo\\swarp\\command\\" . $class;
-        $this->getServer()->getCommandMap()->register("swarp", new $class($this));
-      }
+    foreach([
+      "WarpCommand",
+      "WarpCreateCommand",
+      "WarpDescriptionCommand",
+      "WarpInfoCommand",
+      "WarpListCommand",
+      "WarpOptionCommand",
+      "WarpPermissionCommand",
+      "WarpRemoveCommand",
+      "WorldMoveCommand"
+    ] as $class){
+      $class = "\\solo\\swarp\\command\\" . $class;
+      $this->getServer()->getCommandMap()->register("swarp", new $class($this));
     }
   }
 

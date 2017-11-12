@@ -77,7 +77,6 @@ class WarpOptionCommand extends SWarpCommand{
     }
 
     $this->owner->save();
-    $this->owner->getShortcutManager()->updateShortcut(); // send command data via shortcutmanager TODO: optimize
     return true;
   }
 }
