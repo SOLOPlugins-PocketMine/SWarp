@@ -6,6 +6,8 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerCommandPreprocessEvent;
 use pocketmine\event\server\DataPacketSendEvent;
 
+use solo\swarp\event\WarpCreateEvent;
+
 class ShortcutManager implements Listener{
 
   private $availableCommandsPacketId = 0x4e;
