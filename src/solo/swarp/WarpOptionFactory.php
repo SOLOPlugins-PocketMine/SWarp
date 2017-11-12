@@ -11,6 +11,8 @@ use solo\swarp\option\RandomDestinationOption;
 use solo\swarp\option\ShortcutOption;
 use solo\swarp\option\SubTitleOption;
 use solo\swarp\option\TitleOption;
+use solo\swarp\option\DamageOption;
+use solo\swarp\option\HealOption;
 
 class WarpOptionFactory{
 
@@ -35,6 +37,8 @@ class WarpOptionFactory{
       $this->registerWarpOption(CostOption::class);
     }
     $this->registerWarpOption(CooldownOption::class);
+    $this->registerWarpOption(DamageOption::class);
+    $this->registerWarpOption(HealOption::class);
   }
 
   public function parseOptions(string $input) : array{
