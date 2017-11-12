@@ -7,6 +7,8 @@ use solo\swarp\WarpException;
 use solo\swarp\WarpOption;
 use solo\swarp\event\PlayerWarpEvent;
 
+use pocketmine\event\entity\EntityDamageEvent;
+
 class DamageOption extends WarpOption{
 
   private $damage;
@@ -42,7 +44,7 @@ class DamageOption extends WarpOption{
 
   public function yamlSerialize(){
     $data = parent::yamlSerialize();
-    $data["damage"] = $this->cost;
+    $data["damage"] = $this->damage;
     return $data;
   }
 
