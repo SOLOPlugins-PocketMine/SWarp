@@ -2,7 +2,9 @@
 
 namespace solo\swarp\event;
 
-class WarpRemoveEvent extends WarpEvent{
+use pocketmine\event\Cancellable;
+
+class WarpRemoveEvent extends WarpEvent implements Cancellable{
 
   public static $handlerList = null;
 
