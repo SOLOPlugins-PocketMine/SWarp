@@ -5,6 +5,7 @@ namespace solo\swarp;
 use pocketmine\Player;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\scheduler\PluginTask;
 
 class TitleManager implements Listener{
 
@@ -15,8 +16,8 @@ class TitleManager implements Listener{
 
     $this->owner->getServer()->getPluginManager()->registerEvents($this, $this->owner);
 
-    $this->owner->getServer()->getScheduler()->scheduleRepeatingTask(new class($this->owner) extends SWarpTask{
-      public function _onRun(int $currentTick){
+    $this->owner->getServer()->getScheduler()->scheduleRepeatingTask(new class($this->owner) extends PluginTask{
+      public function onRun(int $currentTick){
         $this->owner->getTitleManager()->tick();
       }
     }, 2);
