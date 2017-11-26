@@ -6,11 +6,10 @@ use pocketmine\Player;
 use pocketmine\command\CommandSender;
 
 use solo\swarp\SWarp;
-use solo\swarp\SWarpCommand;
 use solo\swarp\Warp;
 use solo\swarp\event\WarpCreateEvent;
 
-class WarpCreateCommand extends SWarpCommand{
+class WarpCreateCommand extends Command{
 
   private $owner;
 
@@ -21,31 +20,7 @@ class WarpCreateCommand extends SWarpCommand{
     $this->owner = $owner;
   }
 
-  public function _generateCustomCommandData(Player $player) : array{
-    return [
-      "aliases" => $this->getAliases(),
-      "overloads" => [
-        "default" => [
-          "input" => [
-            "parameters" => [
-              [
-                "type" => "rawtext",
-                "name" => "워프명",
-                "optional" => true
-              ],
-              [
-                "type" => "rawtext",
-                "name" => "옵션...",
-                "optional" => true
-              ]
-            ]
-          ]
-        ]
-      ]
-    ];
-  }
-
-  public function _execute(CommandSender $sender, string $label, array $args) : bool{
+  public function execute(CommandSender $sender, string $label, array $args) : bool{
     if(!$sender instanceof Player){
       $sender->sendMessage(SWarp::$prefix . "인게임에서만 사용할 수 있습니다.");
       return true;

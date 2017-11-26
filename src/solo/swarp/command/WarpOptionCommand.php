@@ -6,9 +6,8 @@ use pocketmine\Player;
 use pocketmine\command\CommandSender;
 
 use solo\swarp\SWarp;
-use solo\swarp\SWarpCommand;
 
-class WarpOptionCommand extends SWarpCommand{
+class WarpOptionCommand extends Command{
 
   private $owner;
 
@@ -19,31 +18,7 @@ class WarpOptionCommand extends SWarpCommand{
     $this->owner = $owner;
   }
 
-  public function _generateCustomCommandData(Player $player) : array{
-    return [
-      "aliases" => $this->getAliases(),
-      "overloads" => [
-        "default" => [
-          "input" => [
-            "parameters" => [
-              [
-                "type" => "rawtext",
-                "name" => "워프명",
-                "optional" => true
-              ],
-              [
-                "type" => "rawtext",
-                "name" => "옵션...",
-                "optional" => true
-              ]
-            ]
-          ]
-        ]
-      ]
-    ];
-  }
-
-  public function _execute(CommandSender $sender, string $label, array $args) : bool{
+  public function execute(CommandSender $sender, string $label, array $args) : bool{
     if(!$sender->hasPermission($this->getPermission())){
       $sender->sendMessage(SWarp::$prefix . "이 명령을 실행할 권한이 없습니다.");
       return true;

@@ -6,11 +6,10 @@ use pocketmine\Player;
 use pocketmine\command\CommandSender;
 
 use solo\swarp\SWarp;
-use solo\swarp\SWarpCommand;
 use solo\swarp\Warp;
 use solo\swarp\WarpException;
 
-class WarpCommand extends SWarpCommand{
+class WarpCommand extends Command{
 
   private $owner;
 
@@ -21,38 +20,7 @@ class WarpCommand extends SWarpCommand{
     $this->owner = $owner;
   }
 
-  public function _generateCustomCommandData(Player $player) : array{
-    return [
-      "aliases" => $this->getAliases(),
-      "overloads" => [
-        "default" => [
-          "input" => [
-            "parameters" => [
-              [
-                "type" => "rawtext",
-                "name" => "워프명",
-                "optional" => true
-                // MCPE Command Auto Complete does not support Unicode... WTF
-                //
-                //"enum_values" => array_map(
-                //  function($warp) use ($player){
-                //    return $warp->getName();
-                //  },
-                //  array_filter(
-                //    $this->owner->getAllWarp(),
-                //    function($warp) use ($player){
-                //      return $player->hasPermission($warp->getPermission());
-                //    }
-                //  ))
-              ]
-            ]
-          ]
-        ]
-      ]
-    ];
-  }
-
-  public function _execute(CommandSender $sender, string $label, array $args) : bool{
+  public function execute(CommandSender $sender, string $label, array $args) : bool{
     if(!$sender instanceof Player){
       $sender->sendMessage(SWarp::$prefix . "인게임에서만 사용할 수 있습니다.");
       return true;

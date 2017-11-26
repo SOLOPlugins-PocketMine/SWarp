@@ -7,9 +7,8 @@ use pocketmine\command\CommandSender;
 use pocketmine\level\Level;
 
 use solo\swarp\SWarp;
-use solo\swarp\SWarpCommand;
 
-class WorldMoveCommand extends SWarpCommand{
+class WorldMoveCommand extends Command{
 
   private $owner;
 
@@ -20,26 +19,7 @@ class WorldMoveCommand extends SWarpCommand{
     $this->owner = $owner;
   }
 
-  public function _generateCustomCommandData(Player $player) : array{
-    return [
-      "aliases" => $this->getAliases(),
-      "overloads" => [
-        "default" => [
-          "input" => [
-            "parameters" => [
-              [
-                "type" => "rawtext",
-                "name" => "월드명",
-                "optional" => true
-              ]
-            ]
-          ]
-        ]
-      ]
-    ];
-  }
-
-  public function _execute(CommandSender $sender, string $label, array $args) : bool{
+  public function execute(CommandSender $sender, string $label, array $args) : bool{
     if(!$sender->hasPermission($this->getPermission())){
       $sender->sendMessage(SWarp::$prefix . "이 명령을 실행할 권한이 없습니다.");
       return true;
