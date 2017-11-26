@@ -52,7 +52,7 @@ class WarpCommand extends Command{
       $sender->sendMessage(SWarp::$prefix . $e->getMessage());
       return true;
     }
-    $sender->sendMessage(SWarp::$prefix . $warp->getName() . " 으로 이동하였습니다.");
+    $sender->sendMessage(SWarp::$prefix . $warp->getName() . " (으)로 이동하였습니다.");
     return true;
   }
 

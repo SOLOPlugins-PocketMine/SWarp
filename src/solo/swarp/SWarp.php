@@ -52,11 +52,11 @@ class SWarp extends PluginBase{
 
     $this->warpOptionFactory = new WarpOptionFactory($this);
 
-    $this->shortcutManager = new ShortcutManager($this);
+    $this->load();
 
     $this->titleManager = new TitleManager($this);
 
-    $this->load();
+    $this->shortcutManager = new ShortcutManager($this);
 
     foreach([
       "WarpCommand",
