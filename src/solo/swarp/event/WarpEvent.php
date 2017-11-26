@@ -2,10 +2,10 @@
 
 namespace solo\swarp\event;
 
-use solo\swarp\SWarpEvent;
+use pocketmine\event\Event;
 use solo\swarp\Warp;
 
-abstract class WarpEvent extends SWarpEvent{
+abstract class WarpEvent extends Event{
 
   protected $warp;
 
