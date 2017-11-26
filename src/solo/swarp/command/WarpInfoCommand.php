@@ -5,7 +5,6 @@ namespace solo\swarp\command;
 use pocketmine\Player;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-
 use solo\swarp\SWarp;
 
 class WarpInfoCommand extends Command{

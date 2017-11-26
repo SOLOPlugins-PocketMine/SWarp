@@ -6,7 +6,6 @@ use pocketmine\Player;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\level\Level;
-
 use solo\swarp\SWarp;
 
 class WorldMoveCommand extends Command{
