@@ -6,7 +6,6 @@ use pocketmine\Player;
 use pocketmine\command\CommandSender;
 
 use solo\swarp\SWarp;
-use solo\swarp\SWarpCommand;
 
 class WarpListCommand extends Command{
 
