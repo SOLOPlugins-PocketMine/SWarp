@@ -13,10 +13,14 @@ class DamageOption extends WarpOption{
 
   private $damage;
 
-  public function __construct(string $value = ""){
-    if(!is_numeric($value)){
-      throw new \InvalidArgumentException("데미지는 숫자로 입력해주세요.");
+  public function __construct(int $value){
+    if($value <= 0){
+      throw new \InvalidArgumentException("데미지는 음수 또는 0이 될 수 없습니다.");
     }
+    $this->damage = $value;
+  }
+  
+  public function __construct(int $value){
     if($value <= 0){
       throw new \InvalidArgumentException("데미지는 음수 또는 0이 될 수 없습니다.");
     }
