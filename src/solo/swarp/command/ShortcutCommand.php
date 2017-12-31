@@ -1,6 +1,6 @@
 <?php
 
-namespace solo\swarp;
+namespace solo\swarp\command;
 
 use pocketmine\Player;
 use pocketmine\command\Command;
