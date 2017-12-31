@@ -20,7 +20,7 @@ class DamageOption extends WarpOption{
     if($value <= 0){
       throw new \InvalidArgumentException("데미지는 음수 또는 0이 될 수 없습니다.");
     }
-    $this->damage = intval($value);
+    $this->damage = floatval($value);
   }
 
   public function getName() : string{
