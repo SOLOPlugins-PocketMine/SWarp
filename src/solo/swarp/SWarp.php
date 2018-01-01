@@ -43,14 +43,15 @@ class SWarp extends PluginBase{
       throw new \InvalidStateException();
     }
     self::$instance = $this;
+
+    $this->warpOptionFactory = new WarpOptionFactory($this);
   }
 
   public function onEnable(){
     @mkdir($this->getDataFolder());
+
     $this->saveResource("setting.yml");
     $this->setting = new Config($this->getDataFolder() . "setting.yml", Config::YAML);
-
-    $this->warpOptionFactory = new WarpOptionFactory($this);
 
     $this->load();
 
