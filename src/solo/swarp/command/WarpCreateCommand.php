@@ -41,7 +41,7 @@ class WarpCreateCommand extends Command{
     $warp = new Warp($warpName, $sender->x, $sender->y, $sender->z, $sender->getLevel()->getFolderName());
     try{
       $this->owner->addWarp($warp->setOptions(WarpOptionFactory::parseOptions(implode(" ", $args))));
-    }catch(\InvalidArgumentException $e){
+    }catch(\InvalidArgumentException | WarpException $e){
       $sender->sendMessage(SWarp::$prefix . $e->getMessage());
       return true;
     }
