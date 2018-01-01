@@ -70,6 +70,7 @@ class SWarp extends PluginBase{
   public function onDisable(){
     if($this->warpManager !== null){
       $this->warpManager->save();
+      $this->warpManager = null;
     }
     $this->shortcutManager = null;
     $this->titleManager = null;
