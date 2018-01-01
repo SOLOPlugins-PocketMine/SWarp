@@ -37,6 +37,8 @@ class WarpOptionFactory{
       if(class_exists("\\onebone\\economyapi\\EconomyAPI")){
         $this->registerWarpOption(CostOption::class);
       }
+    }catch(\Throwable $e){
+
     }
     $this->registerWarpOption(CooldownOption::class);
     $this->registerWarpOption(DamageOption::class);
