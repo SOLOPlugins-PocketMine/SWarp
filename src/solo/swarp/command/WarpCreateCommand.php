@@ -29,10 +29,6 @@ class WarpCreateCommand extends Command{
       $sender->sendMessage(SWarp::$prefix . "이 명령을 실행할 권한이 없습니다.");
       return true;
     }
-    if(!$sender instanceof Player){
-      $sender->sendMessage(SWarp::$prefix . "인게임에서만 사용할 수 있습니다.");
-      return true;
-    }
 
     if(empty($args)){
       $sender->sendMessage(SWarp::$prefix . "사용법 : " . $this->getUsage() . " - " . $this->getDescription());
@@ -42,29 +38,13 @@ class WarpCreateCommand extends Command{
     }
     $warpName = array_shift($args);
 
-    if($this->owner->getWarp($warpName) instanceof Warp){
-      $sender->sendMessage(SWarp::$prefix . "\"" . $warpName . "\" 은(는) 이미 존재하는 워프 이름입니다.");
-      return true;
-    }
-
     $warp = new Warp($warpName, $sender->x, $sender->y, $sender->z, $sender->getLevel()->getFolderName());
     try{
-      $options = WarpOptionFactory::parseOptions(implode(" ", $args));
-      $warp->setOptions($options);
+      $this->owner->addWarp($warp->setOptions(WarpOptionFactory::parseOptions(implode(" ", $args))));
     }catch(\InvalidArgumentException $e){
       $sender->sendMessage(SWarp::$prefix . $e->getMessage());
       return true;
     }
-
-    if($ev->isCancelled()){
-      $sender->sendMessage(SWarp::$prefix . "워프 생성에 실패하였습니다.");
-      return true;
-    }
-
-    // register warp
-    try{
-    $this->owner->addWarp($warp);
-  }
 
     $sender->sendMessage(SWarp::$prefix . "워프를 생성하였습니다.");
     $sender->sendMessage(SWarp::$prefix . "* 워프 이름 : " . $warp->getName());
