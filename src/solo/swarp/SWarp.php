@@ -125,9 +125,16 @@ class SWarp extends PluginBase{
     }
     $warp = strtolower($warp);
     if(!isset($this->warps[$warp])){
-      throw new WarpNotExistsException("\"" . $warp . "\" 이름의 워프는 존재하지 않습니다.");
+      throw new WarpNotExistsException("\"" . $warp . "\" 이름의 워프는 존재하지 않습니다");
     }
     $warpInstance = $this->warps[$warp];
+
+    $ev = new WarpRemoveEvent($warpInstance);
+    $this->owner->getServer()->getPluginManager()->callEvent($ev = new WarpRemoveEvent($warp));
+    if($ev->isCancelled()){
+      throw new WarpException("워프 제거에 실패하였습니다");
+    }
+
     unset($this->warps[strtolower($warp)]);
     return $warpInstance;
   }
