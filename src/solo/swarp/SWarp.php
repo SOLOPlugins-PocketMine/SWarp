@@ -4,6 +4,7 @@ namespace solo\swarp;
 
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
+use solo\swarp\event\WarpCreateEvent;
 
 class SWarp extends PluginBase{
 
@@ -44,7 +45,7 @@ class SWarp extends PluginBase{
     }
     self::$instance = $this;
 
-    $this->warpOptionFactory = new WarpOptionFactory($this);
+    WarpOptionFactory::init();
   }
 
   public function onEnable(){
@@ -78,7 +79,6 @@ class SWarp extends PluginBase{
   public function onDisable(){
     $this->save();
 
-    $this->warpOptionFactory = null;
     $this->shortcutManager = null;
     $this->titleManager = null;
     self::$instance = null;
@@ -86,10 +86,6 @@ class SWarp extends PluginBase{
 
   public function getSetting() : Config{
     return $this->setting;
-  }
-
-  public function getWarpOptionFactory() : WarpOptionFactory{
-    return $this->warpOptionFactory;
   }
 
   public function getShortcutManager() : ShortcutManager{
@@ -102,6 +98,13 @@ class SWarp extends PluginBase{
 
 
   public function addWarp(Warp $warp){
+    if(isset($this->warps[$name = strtolower($warp->getName())])){
+      throw new WarpAlreadyExistsException("\"" . $name . "\" 이름의 워프는 이미 존재합니다");
+    }
+    $this->getServer()->getPluginManager()->callEvent($ev = new WarpCreateEvent($warp));
+    if($ev->isCancelled()){
+      throw new WarpException("워프 생성에 실패하였습니다");
+    }
     $this->warps[strtolower($warp->getName())] = $warp;
   }
 

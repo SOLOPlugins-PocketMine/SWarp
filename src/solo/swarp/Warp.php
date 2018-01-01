@@ -9,25 +9,37 @@ use pocketmine\level\Position;
 use pocketmine\level\particle\BubbleParticle;
 use pocketmine\math\Vector3;
 
+use solo\swarp\WarpOptionFactory;
 use solo\swarp\event\PlayerWarpEvent;
 use solo\swarp\event\WarpOptionUpdateEvent;
 
 class Warp{
 
+  /** @var string */
   protected $name;
+
+  /** @var float*/
   protected $x;
+
+  /** @var float */
   protected $y;
+
+  /** @var float */
   protected $z;
+
+  /** @var string */
   protected $level;
 
   /** @var WarpOption[] */
-  protected $options;
+  protected $options = [];
 
+  /** @var string */
   protected $description = "";
 
+  /** @var string */
   protected $permission = "swarp.warp.default";
 
-  public function __construct(string $name, $x, $y, $z, string $level){
+  public function __construct(string $name, float $x, float $y, float $z, string $level){
     $this->name = strtolower($name);
     $this->x = $x;
     $this->y = $y;
@@ -39,15 +51,15 @@ class Warp{
     return $this->name;
   }
 
-  public function getX(){
+  public function getX() : float{
     return $this->x;
   }
 
-  public function getY(){
+  public function getY() : float{
     return $this->y;
   }
 
-  public function getZ(){
+  public function getZ() : float{
     return $this->z;
   }
 
@@ -57,7 +69,7 @@ class Warp{
 
   public function warp(Player $player, bool $force = false){
     $level = Server::getInstance()->getLevelByName($this->level);
-    if($level === null){
+    if($level === null || $level->isClosed()){
       throw new WarpException($this->level . " 은 로드되지 않았거나 존재하지 않는 월드입니다.");
     }
     $event = new PlayerWarpEvent($this, $player, new Position($this->x, $this->y, $this->z, $level));
@@ -77,44 +89,47 @@ class Warp{
   }
 
   public function hasDescription() : bool{
-    return $this->description !== "";
-  }
-
-  public function setDescription(string $description){
-    $this->description = $description;
+    return !empty($this->description);
   }
 
   public function getDescription() : string{
     return $this->description;
   }
 
+  public function setDescription(string $description) : Warp{
+    $this->description = $description;
+    return $this;
+  }
+
   public function getPermission() : string{
     return $this->permission;
   }
 
-  public function setPermission(string $permission){
+  public function setPermission(string $permission) : Warp{
     $this->permission = $permission;
+    return $this;
   }
 
-  public function hasOptions(){
-    return count($this->options) > 0;
+  public function hasOptions() : bool{
+    return !empty($this->options);
   }
 
-  public function hasOption(string $name){
+  public function hasOption(string $name) : bool{
     return isset($this->options[$name]);
   }
 
-  public function getOption(stirng $name){
-    return $this->options[$name] ?? null;
-  }
-
-  public function getOptions(){
+  public function getOptions() : array{
     return $this->options;
   }
 
-  public function setOptions(array $options){
+  public function getOption(stirng $name) : ?WarpOption{
+    return $this->options[$name] ?? null;
+  }
+
+  public function setOptions(array $options) : Warp{
     $this->options = $options;
     Server::getInstance()->getPluginManager()->callEvent(new WarpOptionUpdateEvent($this));
+    return $this;
   }
 
   public function __toString(){
@@ -123,7 +138,7 @@ class Warp{
     . (count($this->options) > 0 ? " " . implode(", ", array_map(function($option){ return $option->__toString(); }, $this->options)) : "");
   }
 
-  public function yamlSerialize(){
+  public function yamlSerialize() : array{
     $optionsData = [];
     foreach($this->options as $option){
       $optionsData[$option->getName()] = $option->yamlSerialize();
@@ -141,9 +156,8 @@ class Warp{
     ];
   }
 
-  public static function yamlDeserialize(array $data){
-    $ref = new \ReflectionClass(static::class);
-    $warp = $ref->newInstanceWithoutConstructor();
+  public static function yamlDeserialize(array $data) : Warp{
+    $warp = (new \ReflectionClass(static::class))->newInstanceWithoutConstructor();
     $warp->name = $data["name"];
     $warp->x = $data["x"];
     $warp->y = $data["y"];
@@ -154,7 +168,7 @@ class Warp{
 
     $options = [];
     foreach($data["options"] as $optionName => $optionData){
-      $optionClass = SWarp::getInstance()->getWarpOptionFactory()->getWarpOption($optionName);
+      $optionClass = WarpOptionFactory::getWarpOption($optionName);
 
       if($optionClass === null){
         Server::getInstance()->getLogger()->critical("[SWarp] \"" . $optionName . "\" 옵션을 찾을 수 없습니다.");

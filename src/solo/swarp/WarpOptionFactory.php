@@ -16,36 +16,31 @@ use solo\swarp\option\HealOption;
 
 class WarpOptionFactory{
 
-  /** @var SWarp */
-  private $owner;
-
-  private $warpOptionClasses = [];
-
-  public function __construct(SWarp $owner){
-    $this->owner = $owner;
-
-    $this->init();
+  private function __construct(){
+    
   }
 
-  private function init(){
-    $this->registerWarpOption(TitleOption::class);
-    $this->registerWarpOption(SubTitleOption::class);
-    $this->registerWarpOption(DepartureParticleOption::class);
-    $this->registerWarpOption(DestinationParticleOption::class);
-    $this->registerWarpOption(RandomDestinationOption::class);
+  private static $warpOptionClasses = [];
+
+  public static function init(){
+    self::registerWarpOption(TitleOption::class);
+    self::registerWarpOption(SubTitleOption::class);
+    self::registerWarpOption(DepartureParticleOption::class);
+    self::registerWarpOption(DestinationParticleOption::class);
+    self::registerWarpOption(RandomDestinationOption::class);
     try{
       if(class_exists("\\onebone\\economyapi\\EconomyAPI")){
-        $this->registerWarpOption(CostOption::class);
+        self::registerWarpOption(CostOption::class);
       }
     }catch(\Throwable $e){
 
     }
-    $this->registerWarpOption(CooldownOption::class);
-    $this->registerWarpOption(DamageOption::class);
-    $this->registerWarpOption(HealOption::class);
+    self::registerWarpOption(CooldownOption::class);
+    self::registerWarpOption(DamageOption::class);
+    self::registerWarpOption(HealOption::class);
   }
 
-  public function parseOptions(string $input) : array{
+  public static function parseOptions(string $input) : array{
     $args = explode(" ", $input);
 
     $options = [];
@@ -60,7 +55,7 @@ class WarpOptionFactory{
         }
         $optionValue = implode(" ", $optionValueArgs);
 
-        $optionClass = $this->getWarpOption($optionName);
+        $optionClass = self::getWarpOption($optionName);
         if($optionClass === null || !class_exists($optionClass, true)){
           throw new \InvalidArgumentException($optionName . " 옵션은 존재하지 않습니다.");
         }
@@ -73,17 +68,16 @@ class WarpOptionFactory{
     return $options;
   }
 
-  public function getWarpOption(string $name){
-    return $this->warpOptionClasses[$name] ?? null;
+  public static function getWarpOption(string $name){
+    return self::$warpOptionClasses[$name] ?? null;
   }
 
-  public function getAllWarpOptions() : array{
-    return $this->warpOptionClasses;
+  public static function getAllWarpOptions() : array{
+    return self::$warpOptionClasses;
   }
 
-  public function registerWarpOption($class){
-    $ref = new \ReflectionClass($class);
-    $obj = $ref->newInstanceWithoutConstructor();
-    $this->warpOptionClasses[$obj->getName()] = $class;
+  public static function registerWarpOption($class){
+    $obj = (new \ReflectionClass($class))->newInstanceWithoutConstructor();
+    self::warpOptionClasses[$obj->getName()] = $class;
   }
 }

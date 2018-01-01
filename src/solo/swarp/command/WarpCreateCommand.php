@@ -7,7 +7,7 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use solo\swarp\SWarp;
 use solo\swarp\Warp;
-use solo\swarp\event\WarpCreateEvent;
+use solo\swarp\WarpOptionFactory;
 
 class WarpCreateCommand extends Command{
 
@@ -36,7 +36,7 @@ class WarpCreateCommand extends Command{
 
     if(empty($args)){
       $sender->sendMessage(SWarp::$prefix . "사용법 : " . $this->getUsage() . " - " . $this->getDescription());
-      $sender->sendMessage(SWarp::$prefix . "사용 가능한 옵션 : " . implode(", ", array_keys($this->owner->getWarpOptionFactory()->getAllWarpOptions())));
+      $sender->sendMessage(SWarp::$prefix . "사용 가능한 옵션 : " . implode(", ", array_keys(WarpOptionFactory::getAllWarpOptions())));
       $sender->sendMessage(SWarp::$prefix . "옵션 사용 예시 : /워프생성 테스트 -비용 1000 -쿨타임 3");
       return true;
     }
@@ -49,22 +49,22 @@ class WarpCreateCommand extends Command{
 
     $warp = new Warp($warpName, $sender->x, $sender->y, $sender->z, $sender->getLevel()->getFolderName());
     try{
-      $options = $this->owner->getWarpOptionFactory()->parseOptions(implode(" ", $args));
+      $options = WarpOptionFactory::parseOptions(implode(" ", $args));
       $warp->setOptions($options);
     }catch(\InvalidArgumentException $e){
       $sender->sendMessage(SWarp::$prefix . $e->getMessage());
       return true;
     }
 
-    $ev = new WarpCreateEvent($warp);
-    $this->owner->getServer()->getPluginManager()->callEvent($ev, $sender);
     if($ev->isCancelled()){
       $sender->sendMessage(SWarp::$prefix . "워프 생성에 실패하였습니다.");
       return true;
     }
 
     // register warp
+    try{
     $this->owner->addWarp($warp);
+  }
 
     $sender->sendMessage(SWarp::$prefix . "워프를 생성하였습니다.");
     $sender->sendMessage(SWarp::$prefix . "* 워프 이름 : " . $warp->getName());

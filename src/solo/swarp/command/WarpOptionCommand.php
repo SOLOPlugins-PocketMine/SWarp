@@ -6,6 +6,7 @@ use pocketmine\Player;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use solo\swarp\SWarp;
+use solo\swarp\WarpOptionFactory;
 
 class WarpOptionCommand extends Command{
 
@@ -25,7 +26,7 @@ class WarpOptionCommand extends Command{
     }
     if(count($args) < 2){
       $sender->sendMessage(SWarp::$prefix . $this->getUsage() . " - " . $this->getDescription());
-      $sender->sendMessage(SWarp::$prefix . "사용 가능한 옵션 : " . implode(", ", array_keys($this->owner->getWarpOptionFactory()->getAllWarpOptions())));
+      $sender->sendMessage(SWarp::$prefix . "사용 가능한 옵션 : " . implode(", ", array_keys(WarpOptionFactory::getAllWarpOptions())));
       return true;
     }
 
@@ -38,7 +39,7 @@ class WarpOptionCommand extends Command{
     }
 
     try{
-      $options = $this->owner->getWarpOptionFactory()->parseOptions(implode(" ", $args));
+      $options = WarpOptionFactory::parseOptions(implode(" ", $args));
     }catch(\InvalidArgumentException $e){
       $sender->sendMessage(SWarp::$prefix . $e->getMessage());
       return true;
