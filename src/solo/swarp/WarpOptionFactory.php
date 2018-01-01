@@ -17,7 +17,7 @@ use solo\swarp\option\HealOption;
 class WarpOptionFactory{
 
   private function __construct(){
-    
+
   }
 
   private static $warpOptionClasses = [];
@@ -78,6 +78,6 @@ class WarpOptionFactory{
 
   public static function registerWarpOption($class){
     $obj = (new \ReflectionClass($class))->newInstanceWithoutConstructor();
-    self::warpOptionClasses[$obj->getName()] = $class;
+    self::$warpOptionClasses[$obj->getName()] = $class;
   }
 }
