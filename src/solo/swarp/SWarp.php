@@ -81,7 +81,9 @@ class SWarp extends PluginBase{
 
     $this->shortcutManager = null;
     $this->titleManager = null;
-    self::$instance = null;
+    if(self::$instance !== null){
+      self::$instance = null;
+    }
   }
 
   public function getSetting() : Config{
@@ -97,7 +99,8 @@ class SWarp extends PluginBase{
   }
 
 
-  public function addWarp(Warp $warp){
+
+  public function addWarp(Warp $warp) : Warp{
     if(isset($this->warps[$name = strtolower($warp->getName())])){
       throw new WarpAlreadyExistsException("\"" . $name . "\" 이름의 워프는 이미 존재합니다");
     }
@@ -105,22 +108,28 @@ class SWarp extends PluginBase{
     if($ev->isCancelled()){
       throw new WarpException("워프 생성에 실패하였습니다");
     }
-    $this->warps[strtolower($warp->getName())] = $warp;
+    return $this->warps[strtolower($warp->getName())] = $warp;
   }
 
-  public function getWarp(string $name){
+  public function getWarp(string $name) : ?Warp{
     return $this->warps[strtolower($name)] ?? null;
   }
 
-  public function getAllWarp(){
+  public function getAllWarp() : array{
     return $this->warps;
   }
 
-  public function removeWarp($warp){
+  public function removeWarp($warp) : Warp{
     if($warp instanceof Warp){
       $warp = $warp->getName();
     }
+    $warp = strtolower($warp);
+    if(!isset($this->warps[$warp])){
+      throw new WarpNotExistsException("\"" . $warp . "\" 이름의 워프는 존재하지 않습니다.");
+    }
+    $warpInstance = $this->warps[$warp];
     unset($this->warps[strtolower($warp)]);
+    return $warpInstance;
   }
 
   public function save(){
@@ -138,7 +147,7 @@ class SWarp extends PluginBase{
     $this->warpsConfig->save();
   }
 
-  public function load(){
+  private function load(){
     $this->warpsConfig = new Config($this->getDataFolder() . "warps.yml", Config::YAML);
 
     $warps = [];
