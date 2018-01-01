@@ -4,7 +4,6 @@ namespace solo\swarp;
 
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
-use solo\swarp\event\WarpCreateEvent;
 
 class SWarp extends PluginBase{
 
@@ -24,20 +23,14 @@ class SWarp extends PluginBase{
   /** @var Config */
   private $setting;
 
-  /** @var WarpOptionFactory */
-  private $warpOptionFactory;
+  /** @var WarpManager */
+  private $warpManager;
 
   /** @var TitleManager */
   private $titleManager;
 
   /** @var ShortcutManager */
   private $shortcutManager;
-
-  /** @var Config */
-  private $warpsConfig;
-
-  /** @var Warp[] */
-  private $warps = null;
 
   public function onLoad(){
     if(self::$instance !== null){
@@ -54,10 +47,8 @@ class SWarp extends PluginBase{
     $this->saveResource("setting.yml");
     $this->setting = new Config($this->getDataFolder() . "setting.yml", Config::YAML);
 
-    $this->load();
-
+    $this->warpManager = new WarpManager($this);
     $this->titleManager = new TitleManager($this);
-
     $this->shortcutManager = new ShortcutManager($this);
 
     foreach([
@@ -77,8 +68,9 @@ class SWarp extends PluginBase{
   }
 
   public function onDisable(){
-    $this->save();
-
+    if($this->warpManager !== null){
+      $this->warpManager->save();
+    }
     $this->shortcutManager = null;
     $this->titleManager = null;
     if(self::$instance !== null){
@@ -98,82 +90,23 @@ class SWarp extends PluginBase{
     return $this->titleManager;
   }
 
-
+  public function getWarpManager() : WarpManager{
+    return $this->warpManager;
+  }
 
   public function addWarp(Warp $warp) : Warp{
-    if(isset($this->warps[$name = strtolower($warp->getName())])){
-      throw new WarpAlreadyExistsException("\"" . $name . "\" 이름의 워프는 이미 존재합니다");
-    }
-    $this->getServer()->getPluginManager()->callEvent($ev = new WarpCreateEvent($warp));
-    if($ev->isCancelled()){
-      throw new WarpException("워프 생성에 실패하였습니다");
-    }
-    return $this->warps[strtolower($warp->getName())] = $warp;
+    return $this->warpManager->addWarp($warp);
   }
 
   public function getWarp(string $name) : ?Warp{
-    return $this->warps[strtolower($name)] ?? null;
+    return $this->warpManager->getWarp($name);
   }
 
   public function getAllWarp() : array{
-    return $this->warps;
+    return $this->warpManager->getAllWarp();
   }
 
   public function removeWarp($warp) : Warp{
-    if($warp instanceof Warp){
-      $warp = $warp->getName();
-    }
-    $warp = strtolower($warp);
-    if(!isset($this->warps[$warp])){
-      throw new WarpNotExistsException("\"" . $warp . "\" 이름의 워프는 존재하지 않습니다");
-    }
-    $warpInstance = $this->warps[$warp];
-
-    $ev = new WarpRemoveEvent($warpInstance);
-    $this->owner->getServer()->getPluginManager()->callEvent($ev = new WarpRemoveEvent($warp));
-    if($ev->isCancelled()){
-      throw new WarpException("워프 제거에 실패하였습니다");
-    }
-
-    unset($this->warps[strtolower($warp)]);
-    return $warpInstance;
-  }
-
-  public function save(){
-    if($this->warps === null){
-      return;
-    }
-
-    $serializedData = [];
-    foreach($this->warps as $warp){
-      $data = $warp->yamlSerialize();
-      $data["class"] = get_class($warp);
-      $serializedData[] = $data;
-    }
-    $this->warpsConfig->setAll($serializedData);
-    $this->warpsConfig->save();
-  }
-
-  private function load(){
-    $this->warpsConfig = new Config($this->getDataFolder() . "warps.yml", Config::YAML);
-
-    $warps = [];
-
-    foreach($this->warpsConfig->getAll() as $data){
-      $class = $data["class"];
-      unset($data["class"]);
-
-      if(!class_exists($class, true)){
-        $this->getServer()->getLogger()->critical("[SWarp] " . $class . " 클래스를 찾을 수 없습니다.");
-        continue;
-      }else if($class !== Warp::class && !is_subclass_of($class, Warp::class)){
-        $this->getServer()->getLogger()->critical("[SWarp] " . $class . " 클래스는 " . Warp::class . " 의 서브클래스가 아닙니다.");
-        continue;
-      }
-      $warp = $class::yamlDeserialize($data);
-
-      $warps[strtolower($warp->getName())] = $warp;
-    }
-    $this->warps = $warps;
+    return $this->warpManager->removeWarp($warp);
   }
 }
