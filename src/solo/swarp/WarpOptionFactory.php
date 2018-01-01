@@ -27,14 +27,16 @@ class WarpOptionFactory{
     $this->init();
   }
 
-  public function init(){
+  private function init(){
     $this->registerWarpOption(TitleOption::class);
     $this->registerWarpOption(SubTitleOption::class);
     $this->registerWarpOption(DepartureParticleOption::class);
     $this->registerWarpOption(DestinationParticleOption::class);
     $this->registerWarpOption(RandomDestinationOption::class);
-    if(class_exists("\\onebone\\economyapi\\EconomyAPI", true)){
-      $this->registerWarpOption(CostOption::class);
+    try{
+      if(class_exists("\\onebone\\economyapi\\EconomyAPI")){
+        $this->registerWarpOption(CostOption::class);
+      }
     }
     $this->registerWarpOption(CooldownOption::class);
     $this->registerWarpOption(DamageOption::class);
