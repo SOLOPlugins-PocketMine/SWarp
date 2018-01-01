@@ -11,19 +11,10 @@ use solo\swarp\WarpOptionFactory;
 use solo\swarp\event\PlayerWarpEvent;
 use solo\swarp\event\WarpOptionUpdateEvent;
 
-class Warp{
+class Warp extends Vector3{
 
   /** @var string */
   protected $name;
-
-  /** @var float*/
-  protected $x;
-
-  /** @var float */
-  protected $y;
-
-  /** @var float */
-  protected $z;
 
   /** @var string */
   protected $level;
@@ -38,27 +29,13 @@ class Warp{
   protected $permission = "swarp.warp.default";
 
   public function __construct(string $name, float $x, float $y, float $z, string $level){
+    parent::__construct($x, $y, $z);
     $this->name = strtolower($name);
-    $this->x = $x;
-    $this->y = $y;
-    $this->z = $z;
     $this->level = $level;
   }
 
   public function getName() : string{
     return $this->name;
-  }
-
-  public function getX() : float{
-    return $this->x;
-  }
-
-  public function getY() : float{
-    return $this->y;
-  }
-
-  public function getZ() : float{
-    return $this->z;
   }
 
   public function getLevel() : string{
@@ -128,10 +105,6 @@ class Warp{
     $this->options = $options;
     Server::getInstance()->getPluginManager()->callEvent(new WarpOptionUpdateEvent($this));
     return $this;
-  }
-
-  public function asVector3() : Vector3{
-    return new Vector3($this->x, $this->y, $this->z);
   }
 
   public function asPosition() : Position{
