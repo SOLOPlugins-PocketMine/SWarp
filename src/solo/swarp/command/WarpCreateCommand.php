@@ -7,6 +7,7 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use solo\swarp\SWarp;
 use solo\swarp\Warp;
+use solo\swarp\WarpException;
 use solo\swarp\WarpOptionFactory;
 
 class WarpCreateCommand extends Command{
