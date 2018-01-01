@@ -27,14 +27,14 @@ class TitleOption extends WarpOption{
     return $this->getName() . " : " . $this->titleMessage;
   }
 
-  public function yamlSerialize(){
-    $data = parent::yamlSerialize();
+  public function jsonSerialize() : array{
+    $data = parent::jsonSerialize();
     $data["titleMessage"] = $this->titleMessage;
     return $data;
   }
 
-  public static function yamlDeserialize(array $data){
-    $option = parent::yamlDeserialize($data);
+  public static function jsonDeserialize(array $data) : WarpOption{
+    $option = parent::jsonDeserialize($data);
     $option->titleMessage = $data["titleMessage"];
     return $option;
   }

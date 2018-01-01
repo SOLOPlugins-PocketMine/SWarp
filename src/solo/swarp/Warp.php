@@ -117,10 +117,10 @@ class Warp extends Vector3{
     . (count($this->options) > 0 ? " " . implode(", ", array_map(function($option){ return $option->__toString(); }, $this->options)) : "");
   }
 
-  public function yamlSerialize() : array{
+  public function jsonSerialize() : array{
     $optionsData = [];
     foreach($this->options as $option){
-      $optionsData[$option->getName()] = $option->yamlSerialize();
+      $optionsData[$option->getName()] = $option->jsonSerialize();
     }
 
     return [
@@ -135,7 +135,7 @@ class Warp extends Vector3{
     ];
   }
 
-  public static function yamlDeserialize(array $data) : Warp{
+  public static function jsonDeserialize(array $data) : Warp{
     $warp = (new \ReflectionClass(static::class))->newInstanceWithoutConstructor();
     $warp->name = $data["name"];
     $warp->x = $data["x"];
@@ -160,7 +160,7 @@ class Warp extends Vector3{
         continue;
       }
 
-      $optionInstance = $optionClass::yamlDeserialize($optionData);
+      $optionInstance = $optionClass::jsonDeserialize($optionData);
       $options[$optionInstance->getName()] = $optionInstance;
     }
     $warp->options = $options;

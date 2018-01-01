@@ -36,14 +36,14 @@ class HealOption extends WarpOption{
     return $this->getName() . " : " . $this->heal;
   }
 
-  public function yamlSerialize(){
-    $data = parent::yamlSerialize();
+  public function jsonSerialize() : array{
+    $data = parent::jsonSerialize();
     $data["heal"] = $this->heal;
     return $data;
   }
 
-  public static function yamlDeserialize(array $data){
-    $option = parent::yamlDeserialize($data);
+  public static function jsonDeserialize(array $data) : WarpOption{
+    $option = parent::jsonDeserialize($data);
     $option->heal = $data["heal"];
     return $option;
   }

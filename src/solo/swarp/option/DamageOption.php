@@ -42,14 +42,14 @@ class DamageOption extends WarpOption{
     return $this->getName() . " : " . $this->damage;
   }
 
-  public function yamlSerialize(){
-    $data = parent::yamlSerialize();
+  public function jsonSerialize() : array{
+    $data = parent::jsonSerialize();
     $data["damage"] = $this->damage;
     return $data;
   }
 
-  public static function yamlDeserialize(array $data){
-    $option = parent::yamlDeserialize($data);
+  public static function jsonDeserialize(array $data) : WarpOption{
+    $option = parent::jsonDeserialize($data);
     $option->damage = $data["damage"];
     return $option;
   }

@@ -43,14 +43,14 @@ class RandomDestinationOption extends WarpOption{
     return $this->getName() . " 범위 : " . $this->range;
   }
 
-  public function yamlSerialize(){
-    $data = parent::yamlSerialize();
+  public function jsonSerialize() : array{
+    $data = parent::jsonSerialize();
     $data["range"] = $this->range;
     return $data;
   }
 
-  public static function yamlDeserialize(array $data){
-    $option = parent::yamlDeserialize($data);
+  public static function jsonDeserialize(array $data) : WarpOption{
+    $option = parent::jsonDeserialize($data);
     $option->range = $data["range"];
     return $option;
   }

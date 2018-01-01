@@ -38,7 +38,7 @@ class WarpManager{
         $this->owner->getServer()->getLogger()->critical("[SWarp] " . $class . " 클래스는 " . Warp::class . " 의 서브클래스가 아닙니다.");
         continue;
       }
-      $warp = $class::yamlDeserialize($data);
+      $warp = $class::jsonDeserialize($data);
 
       $warps[strtolower($warp->getName())] = $warp;
     }
@@ -51,7 +51,7 @@ class WarpManager{
     }
     $serializedData = [];
     foreach($this->warps as $warp){
-      $data = $warp->yamlSerialize();
+      $data = $warp->jsonSerialize();
       $data["class"] = get_class($warp);
       $serializedData[] = $data;
     }

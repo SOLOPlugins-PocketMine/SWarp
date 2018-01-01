@@ -42,14 +42,14 @@ class CostOption extends WarpOption{
     return $this->getName() . " : " . $this->cost;
   }
 
-  public function yamlSerialize(){
-    $data = parent::yamlSerialize();
+  public function jsonSerialize() : array{
+    $data = parent::jsonSerialize();
     $data["cost"] = $this->cost;
     return $data;
   }
 
-  public static function yamlDeserialize(array $data){
-    $option = parent::yamlDeserialize($data);
+  public static function jsonDeserialize(array $data) : WarpOption{
+    $option = parent::jsonDeserialize($data);
     $option->cost = $data["cost"];
     return $option;
   }

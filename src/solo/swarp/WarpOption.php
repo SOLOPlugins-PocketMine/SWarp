@@ -16,11 +16,11 @@ abstract class WarpOption{
 
   }
 
-  public function yamlSerialize(){
+  public function jsonSerialize() : array{
     return [];
   }
 
-  public static function yamlDeserialize(array $data){
+  public static function jsonDeserialize(array $data) : WarpOption{
     $ref = new \ReflectionClass(static::class);
     $option = $ref->newInstanceWithoutConstructor();
     return $option;

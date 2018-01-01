@@ -27,14 +27,14 @@ class SubTitleOption extends WarpOption{
     return $this->getName() . " : " . $this->subTitleMessage;
   }
 
-  public function yamlSerialize(){
-    $data = parent::yamlSerialize();
+  public function jsonSerialize() : array{
+    $data = parent::jsonSerialize();
     $data["subTitleMessage"] = $this->subTitleMessage;
     return $data;
   }
 
-  public static function yamlDeserialize(array $data){
-    $option = parent::yamlDeserialize($data);
+  public static function jsonDeserialize(array $data) : WarpOption{
+    $option = parent::jsonDeserialize($data);
     $option->subTitleMessage = $data["subTitleMessage"];
     return $option;
   }
