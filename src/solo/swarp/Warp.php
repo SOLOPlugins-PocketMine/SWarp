@@ -6,9 +6,7 @@ use pocketmine\Server;
 use pocketmine\Player;
 use pocketmine\level\Level;
 use pocketmine\level\Position;
-use pocketmine\level\particle\BubbleParticle;
 use pocketmine\math\Vector3;
-
 use solo\swarp\WarpOptionFactory;
 use solo\swarp\event\PlayerWarpEvent;
 use solo\swarp\event\WarpOptionUpdateEvent;
@@ -130,6 +128,14 @@ class Warp{
     $this->options = $options;
     Server::getInstance()->getPluginManager()->callEvent(new WarpOptionUpdateEvent($this));
     return $this;
+  }
+
+  public function asVector3() : Vector3{
+    return new Vector3($this->x, $this->y, $this->z);
+  }
+
+  public function asPosition() : Position{
+    return Position::fromObject($this->asVector3(), Server::getInstance()->getLevelByName($this->level));
   }
 
   public function __toString(){
