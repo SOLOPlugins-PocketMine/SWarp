@@ -53,8 +53,7 @@ class WarpManager{
     }
     $warpInstance = $this->warps[$warp];
 
-    $ev = new WarpRemoveEvent($warpInstance);
-    $this->owner->getServer()->getPluginManager()->callEvent($ev = new WarpRemoveEvent($warp));
+    $this->owner->getServer()->getPluginManager()->callEvent($ev = new WarpRemoveEvent($warpInstance));
     if($ev->isCancelled()){
       throw new WarpException("워프 제거에 실패하였습니다");
     }
