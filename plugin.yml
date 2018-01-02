@@ -1,6 +1,6 @@
 name: SWarp
 author: solo
-version: 0.2.0
+version: 0.3.0
 api:
 - 3.0.0-ALPHA10
 main: solo\swarp\SWarp
