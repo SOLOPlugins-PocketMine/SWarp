@@ -21,11 +21,14 @@ abstract class WarpOption{
   }
 
   public static function jsonDeserialize(array $data) : WarpOption{
-    $ref = new \ReflectionClass(static::class);
-    $option = $ref->newInstanceWithoutConstructor();
+    $option = static::createObject();
     foreach($data as $key => $value){
       $option->{$key} = $value;
     }
     return $option;
+  }
+
+  protected static function createObject() : WarpOption{
+    return (new \ReflectionClass(static::class))->newInstanceWithoutConstructor();
   }
 }

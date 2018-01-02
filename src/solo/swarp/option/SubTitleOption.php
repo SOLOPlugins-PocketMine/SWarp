@@ -6,13 +6,15 @@ use solo\swarp\SWarp;
 use solo\swarp\WarpException;
 use solo\swarp\WarpOption;
 use solo\swarp\event\PlayerWarpEvent;
+use solo\swarp\option\argument\ArgumentString;
 
 class SubTitleOption extends WarpOption{
 
+  /** @var string */
   private $subTitleMessage;
 
-  public function __construct(string $value = ""){
-    $this->subTitleMessage = $value;
+  public function __construct(ArgumentString ...$args){
+    $this->subTitleMessage = implode(" ", $args);
   }
 
   public function getName() : string{
@@ -27,6 +29,7 @@ class SubTitleOption extends WarpOption{
     return $this->getName() . " : " . $this->subTitleMessage;
   }
 
+  /*
   public function jsonSerialize() : array{
     $data = parent::jsonSerialize();
     $data["subTitleMessage"] = $this->subTitleMessage;
@@ -38,4 +41,5 @@ class SubTitleOption extends WarpOption{
     $option->subTitleMessage = $data["subTitleMessage"];
     return $option;
   }
+  */
 }

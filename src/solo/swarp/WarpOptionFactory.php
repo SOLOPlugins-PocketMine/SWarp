@@ -2,17 +2,19 @@
 
 namespace solo\swarp;
 
-use solo\swarp\option\CostOption;
+use solo\swarp\option\ConsumeItemOption;
 use solo\swarp\option\CooldownOption;
+use solo\swarp\option\CostOption;
+use solo\swarp\option\DamageOption;
 use solo\swarp\option\DepartureParticleOption;
-use solo\swarp\option\DescriptionOption;
 use solo\swarp\option\DestinationParticleOption;
+use solo\swarp\option\EffectOption;
+use solo\swarp\option\GainItemOption;
+use solo\swarp\option\GainMoneyOption;
+use solo\swarp\option\HealOption;
 use solo\swarp\option\RandomDestinationOption;
-use solo\swarp\option\ShortcutOption;
 use solo\swarp\option\SubTitleOption;
 use solo\swarp\option\TitleOption;
-use solo\swarp\option\DamageOption;
-use solo\swarp\option\HealOption;
 
 class WarpOptionFactory{
 
@@ -38,6 +40,8 @@ class WarpOptionFactory{
     self::registerWarpOption(CooldownOption::class);
     self::registerWarpOption(DamageOption::class);
     self::registerWarpOption(HealOption::class);
+    self::registerWarpOption(EffectOption::class);
+    self::registerWarpOption(GiveItemOption::class);
   }
 
   public static function parseOptions(string $input) : array{
@@ -45,25 +49,72 @@ class WarpOptionFactory{
 
     $options = [];
 
-    $i = 0;
-    while($i < count($args)){
-      if(substr($args[$i], 0, 1) == "-"){
-        $optionName = substr($args[$i], 1);
-        $optionValueArgs = [];
-        while(substr($args[$i + 1] ?? "-", 0, 1) != "-"){
-          $optionValueArgs[] = $args[++$i];
+    $index = 0;
+    while($index < count($args)){
+      if(substr($args[$index], 0, 1) == "-"){
+        $optionName = substr($args[$index], 1);
+        $optionArgs = [];
+        while(substr($args[$index + 1] ?? "-", 0, 1) != "-"){
+          $optionArgs[] = $args[++$index];
         }
-        $optionValue = implode(" ", $optionValueArgs);
 
         $optionClass = self::getWarpOption($optionName);
         if($optionClass === null || !class_exists($optionClass, true)){
-          throw new \InvalidArgumentException($optionName . " 옵션은 존재하지 않습니다.");
+          throw new \InvalidArgumentException("\"" . $optionName . "\" 옵션은 존재하지 않습니다.");
         }
 
-        $optionInstance = new $optionClass($optionValue);
+        $constructor = (new \ReflectionClass($optionClass))->getConstructor();
+        $parameters = $constructor->getParameters();
+        $optionInvokeArgs = [];
+
+        $usage = "사용법 : -" . $optionName . " " . implode(" ", array_map(function($parameter){
+          if($parameter->isOptional()){
+            return "[" . $parameter->getName() . "]";
+          }else{
+            return "<" . $parameter->getName() . ">";
+          }
+        }, $parameters));
+
+        while(true){
+          // Parameters iterate
+          if(!isset($parameter) || !$parameter->isVariadic()){
+            $parameter = array_shift($parameters);
+            if($parameter === null){
+              break;
+            }
+          }
+
+          // optionArgs iterate
+          $argInput = array_shift($optionArgs);
+
+          if($argInput === null){
+            if($parameter->isVariadic() && count($optionInvokeArgs) > 0){
+              throw new \InvalidArgumentException($optionName . ": 입력 값이 부족합니다. " . $usage);
+            }
+            if($parameter->isOptional()){
+              continue;
+            }
+            throw new \InvalidArgumentException($optionName . ": 입력 값이 부족합니다. " . $usage);
+          }
+          $argClass = $parameter->getClass()->getName();
+
+          try{
+            $argObject = new $argClass($argInput);
+          }catch(\InvalidArgumentException $e){
+            throw new \InvalidArgumentException($optionName . ": " . $parameter->getName() . " " . $e->getMessage() . " " . $usage);
+          }
+
+          $optionInvokeArgs[] = $argObject;
+        }
+
+        try{
+          $optionInstance = new $optionClass(...$optionInvokeArgs);
+        }catch(\InvalidArgumentException $e){
+          throw new \InvalidArgumentException($optionName . ": " . $e->getMessage());
+        }
         $options[$optionInstance->getName()] = $optionInstance;
       }
-      $i++;
+      $index++;
     }
     return $options;
   }

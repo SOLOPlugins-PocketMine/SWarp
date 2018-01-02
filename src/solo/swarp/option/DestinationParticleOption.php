@@ -13,7 +13,7 @@ use solo\swarp\event\PlayerWarpEvent;
 
 class DestinationParticleOption extends WarpOption{
 
-  public function __construct(string $value = ""){
+  public function __construct(){
 
   }
 

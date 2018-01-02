@@ -6,21 +6,16 @@ use solo\swarp\SWarp;
 use solo\swarp\WarpException;
 use solo\swarp\WarpOption;
 use solo\swarp\event\PlayerWarpEvent;
-
+use solo\swarp\option\argument\ArgumentFloatPositive;
 use onebone\economyapi\EconomyAPI;
 
 class CostOption extends WarpOption{
 
+  /** @var float */
   private $cost;
 
-  public function __construct(string $value = ""){
-    if(!is_numeric($value)){
-      throw new \InvalidArgumentException("비용은 숫자로 입력해주세요.");
-    }
-    if($value <= 0){
-      throw new \InvalidArgumentException("비용은 음수 또는 0이 될 수 없습니다.");
-    }
-    $this->cost = $value;
+  public function __construct(ArgumentFloatPositive $amount){
+    $this->cost = $amount->getValue();
   }
 
   public function getName() : string{
@@ -42,6 +37,7 @@ class CostOption extends WarpOption{
     return $this->getName() . " : " . $this->cost;
   }
 
+  /*
   public function jsonSerialize() : array{
     $data = parent::jsonSerialize();
     $data["cost"] = $this->cost;
@@ -53,4 +49,5 @@ class CostOption extends WarpOption{
     $option->cost = $data["cost"];
     return $option;
   }
+  */
 }

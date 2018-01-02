@@ -6,14 +6,13 @@ use pocketmine\block\Block;
 use pocketmine\level\Position;
 use pocketmine\level\particle\DestroyBlockParticle;
 use pocketmine\math\Vector3;
-
 use solo\swarp\WarpException;
 use solo\swarp\WarpOption;
 use solo\swarp\event\PlayerWarpEvent;
 
 class DepartureParticleOption extends WarpOption{
 
-  public function __construct(string $value = ""){
+  public function __construct(){
 
   }
 

@@ -6,21 +6,16 @@ use solo\swarp\SWarp;
 use solo\swarp\WarpException;
 use solo\swarp\WarpOption;
 use solo\swarp\event\PlayerWarpEvent;
-
+use solo\swarp\option\argument\ArgumentFloatPositive;
 use pocketmine\event\entity\EntityDamageEvent;
 
 class DamageOption extends WarpOption{
 
+  /** @var float */
   private $damage;
 
-  public function __construct(string $value = ""){
-    if(!is_numeric($value)){
-      throw new \InvalidArgumentException("데미지 값은 숫자이어야 합니다.");
-    }
-    if($value <= 0){
-      throw new \InvalidArgumentException("데미지는 음수 또는 0이 될 수 없습니다.");
-    }
-    $this->damage = floatval($value);
+  public function __construct(ArgumentFloatPositive $damage){
+    $this->damage = $damage->getValue();
   }
 
   public function getName() : string{
@@ -42,6 +37,7 @@ class DamageOption extends WarpOption{
     return $this->getName() . " : " . $this->damage;
   }
 
+  /*
   public function jsonSerialize() : array{
     $data = parent::jsonSerialize();
     $data["damage"] = $this->damage;
@@ -53,4 +49,5 @@ class DamageOption extends WarpOption{
     $option->damage = $data["damage"];
     return $option;
   }
+  */
 }

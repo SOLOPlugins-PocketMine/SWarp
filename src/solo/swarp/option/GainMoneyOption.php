@@ -7,40 +7,40 @@ use solo\swarp\WarpException;
 use solo\swarp\WarpOption;
 use solo\swarp\event\PlayerWarpEvent;
 use solo\swarp\option\argument\ArgumentFloatPositive;
-use pocketmine\event\entity\EntityRegainHealthEvent;
+use onebone\economyapi\EconomyAPI;
 
-class HealOption extends WarpOption{
+class GainMoneyOption extends WarpOption{
 
   /** @var float */
-  private $heal;
+  private $amount;
 
-  public function __construct(ArgumentFloatPositive $heal){
-    $this->heal = $heal->getValue();
+  public function __construct(ArgumentFloatPositive $amount){
+    $this->amount = $amount->getValue();
   }
 
   public function getName() : string{
-    return "회복";
+    return "돈획득";
   }
 
   public function apply(PlayerWarpEvent $event){
-    $event->getPlayer()->attack(new EntityRegainHealthEvent($event->getPlayer(), $this->heal, EntityRegainHealthEvent::CAUSE_MAGIC));
-    $event->getPlayer()->sendMessage(SWarp::$prefix . "워프하여 체력이 " . $this->heal . " 만큼 회복되었습니다");
+    EconomyAPI::getInstance()->addMoney($event->getPlayer(), $this->amount);
+    $event->getPlayer()->sendMessage(SWarp::$prefix . "워프하여 " . $this->amount . "원을 획득하였습니다.");
   }
 
   public function __toString(){
-    return $this->getName() . " : " . $this->heal;
+    return $this->getName() . " : " . $this->cost;
   }
 
   /*
   public function jsonSerialize() : array{
     $data = parent::jsonSerialize();
-    $data["heal"] = $this->heal;
+    $data["cost"] = $this->cost;
     return $data;
   }
 
   public static function jsonDeserialize(array $data) : WarpOption{
     $option = parent::jsonDeserialize($data);
-    $option->heal = $data["heal"];
+    $option->cost = $data["cost"];
     return $option;
   }
   */

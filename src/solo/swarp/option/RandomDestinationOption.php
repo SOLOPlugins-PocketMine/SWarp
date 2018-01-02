@@ -7,22 +7,15 @@ use pocketmine\level\Position;
 use solo\swarp\WarpException;
 use solo\swarp\WarpOption;
 use solo\swarp\event\PlayerWarpEvent;
+use solo\swarp\option\argument\ArgumentFloatPositive;
 
 class RandomDestinationOption extends WarpOption{
 
+  /** @var float */
   private $range;
 
-  public function __construct(string $value = ""){
-    if($value === ""){
-      $value = 5;
-    }
-    if(!is_numeric($value)){
-      return new \InvalidArgumentException("범위는 숫자로 적어주세요.");
-    }
-    if($value <= 0){
-      return new \InvalidArgumentException("범위는 음수 또는 0이 될 수 없습니다.");
-    }
-    $this->range = $value;
+  public function __construct(ArgumentFloatPositive $range){
+    $this->range = $range->getValue();
   }
 
   public function getName() : string{
@@ -43,6 +36,7 @@ class RandomDestinationOption extends WarpOption{
     return $this->getName() . " 범위 : " . $this->range;
   }
 
+  /*
   public function jsonSerialize() : array{
     $data = parent::jsonSerialize();
     $data["range"] = $this->range;
@@ -54,4 +48,5 @@ class RandomDestinationOption extends WarpOption{
     $option->range = $data["range"];
     return $option;
   }
+  */
 }

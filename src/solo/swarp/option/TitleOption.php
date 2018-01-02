@@ -6,13 +6,15 @@ use solo\swarp\SWarp;
 use solo\swarp\WarpException;
 use solo\swarp\WarpOption;
 use solo\swarp\event\PlayerWarpEvent;
+use solo\swarp\option\argument\ArgumentString;
 
 class TitleOption extends WarpOption{
 
+  /** @var string */
   private $titleMessage;
 
-  public function __construct(string $value = ""){
-    $this->titleMessage = $value;
+  public function __construct(ArgumentString ...$args){
+    $this->subTitleMessage = implode(" ", $args);
   }
 
   public function getName() : string{
@@ -27,6 +29,7 @@ class TitleOption extends WarpOption{
     return $this->getName() . " : " . $this->titleMessage;
   }
 
+  /*
   public function jsonSerialize() : array{
     $data = parent::jsonSerialize();
     $data["titleMessage"] = $this->titleMessage;
@@ -38,4 +41,5 @@ class TitleOption extends WarpOption{
     $option->titleMessage = $data["titleMessage"];
     return $option;
   }
+  */
 }
