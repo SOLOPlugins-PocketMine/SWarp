@@ -33,6 +33,7 @@ class WarpOptionFactory{
     try{
       if(class_exists("\\onebone\\economyapi\\EconomyAPI")){
         self::registerWarpOption(CostOption::class);
+        self::registerWarpOption(GainMoney::class);
       }
     }catch(\Throwable $e){
 
@@ -41,7 +42,9 @@ class WarpOptionFactory{
     self::registerWarpOption(DamageOption::class);
     self::registerWarpOption(HealOption::class);
     self::registerWarpOption(EffectOption::class);
-    self::registerWarpOption(GiveItemOption::class);
+    self::registerWarpOption(GainItemOption::class);
+    self::registerWarpOption(ConsumeItemOption::class);
+    self::registerWarpOption(GainMoneyOption::class);
   }
 
   public static function parseOptions(string $input) : array{
