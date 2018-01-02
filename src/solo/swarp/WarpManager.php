@@ -71,10 +71,10 @@ class WarpManager{
       unset($data["class"]);
 
       if(!class_exists($class, true)){
-        $this->owner->getServer()->getLogger()->critical("[SWarp] " . $class . " 클래스를 찾을 수 없습니다.");
+        $this->owner->getLogger()->critical($class . " 클래스를 찾을 수 없습니다.");
         continue;
       }else if($class !== Warp::class && !is_subclass_of($class, Warp::class)){
-        $this->owner->getServer()->getLogger()->critical("[SWarp] " . $class . " 클래스는 " . Warp::class . " 의 서브클래스가 아닙니다.");
+        $this->owner->getLogger()->critical($class . " 클래스는 " . Warp::class . " 의 서브클래스가 아닙니다.");
         continue;
       }
       $warp = $class::jsonDeserialize($data);
