@@ -25,11 +25,11 @@ class ShortcutManager implements Listener{
   }
 
   public function registerShortcut(Warp $warp){
-    $this->owner->getServer()->getCommandMap()->register("swarp", new ShortcutCommand($this->owner, $event->getWarp()));
+    $this->owner->getServer()->getCommandMap()->register("swarp", new ShortcutCommand($this->owner, $warp));
   }
 
   public function unregisterShortcut(Warp $warp){
-    $command = $this->owner->getServer()->getCommandMap()->getCommand($event->getWarp()->getName());
+    $command = $this->owner->getServer()->getCommandMap()->getCommand($warp->getName());
     if($command instanceof ShortcutCommand){
       $this->owner->getServer()->getCommandMap()->unregister($command);
     }
