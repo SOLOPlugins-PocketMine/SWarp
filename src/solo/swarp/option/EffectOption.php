@@ -9,6 +9,7 @@ use solo\swarp\event\PlayerWarpEvent;
 use solo\swarp\option\argument\ArgumentFloatPositive;
 use solo\swarp\option\argument\ArgumentNatural;
 use solo\swarp\option\argument\ArgumentString;
+use pocketmine\entity\Effect;
 
 class EffectOption extends WarpOption{
 
