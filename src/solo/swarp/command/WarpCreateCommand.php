@@ -32,8 +32,8 @@ class WarpCreateCommand extends Command{
     }
 
     $warpName = array_shift($args);
-    
-    if($warpName === false || trim($warpName) === ""){
+
+    if($warpName === null || trim($warpName) === ""){
       $sender->sendMessage(SWarp::$prefix . "사용법 : " . $this->getUsage() . " - " . $this->getDescription());
       $sender->sendMessage(SWarp::$prefix . "사용 가능한 옵션 : " . implode(", ", array_keys(WarpOptionFactory::getAllWarpOptions())));
       $sender->sendMessage(SWarp::$prefix . "옵션 사용 예시 : /워프생성 테스트 -비용 1000 -쿨타임 3");

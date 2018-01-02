@@ -28,7 +28,7 @@ class WarpRemoveCommand extends Command{
 
     $warpName = array_shift($args);
 
-    if($warpName === false || trim($warpName) === ""){
+    if($warpName === null || trim($warpName) === ""){
       $sender->sendMessage(SWarp::$prefix . "사용법 : " . $this->getUsage() . " - " . $this->getDescription());
       return true;
     }
