@@ -25,17 +25,19 @@ class WarpRemoveCommand extends Command{
       $sender->sendMessage(SWarp::$prefix . "이 명령을 실행할 권한이 없습니다.");
       return true;
     }
-    if(empty($args)){
+
+    $warpName = array_shift($args);
+
+    if($warpName === false || trim($warpName) === ""){
       $sender->sendMessage(SWarp::$prefix . "사용법 : " . $this->getUsage() . " - " . $this->getDescription());
       return true;
     }
 
     try{
-      $this->owner->removeWarp(array_shift($args));
+      $sender->sendMessage(SWarp::$prefix . "\"" . $this->owner->removeWarp($warpName)->getName() . "\" 워프를 제거하였습니다.");
     }catch(WarpException $e){
       $sender->sendMessage(SWarp::$prefix . $e->getMessage());
     }
-    $sender->sendMessage(SWarp::$prefix . "\"" . $warp->getName() . "\" 워프를 제거하였습니다.");
     return true;
   }
 }

@@ -31,13 +31,14 @@ class WarpCreateCommand extends Command{
       return true;
     }
 
-    if(empty($args)){
+    $warpName = array_shift($args);
+    
+    if($warpName === false || trim($warpName) === ""){
       $sender->sendMessage(SWarp::$prefix . "사용법 : " . $this->getUsage() . " - " . $this->getDescription());
       $sender->sendMessage(SWarp::$prefix . "사용 가능한 옵션 : " . implode(", ", array_keys(WarpOptionFactory::getAllWarpOptions())));
       $sender->sendMessage(SWarp::$prefix . "옵션 사용 예시 : /워프생성 테스트 -비용 1000 -쿨타임 3");
       return true;
     }
-    $warpName = array_shift($args);
 
     $warp = new Warp($warpName, $sender->x, $sender->y, $sender->z, $sender->getLevel()->getFolderName());
     try{
