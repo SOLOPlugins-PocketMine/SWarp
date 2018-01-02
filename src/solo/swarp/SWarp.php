@@ -110,4 +110,10 @@ class SWarp extends PluginBase{
   public function removeWarp($warp) : Warp{
     return $this->warpManager->removeWarp($warp);
   }
+
+  public function save(){
+    if($this->warpManager instanceof WarpManager){
+      $this->warpManager->save();
+    }
+  }
 }
