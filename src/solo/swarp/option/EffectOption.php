@@ -37,7 +37,7 @@ class EffectOption extends WarpOption{
   }
 
   public function __toString(){
-    return $this->getName() . " : " . $this->effect->getName() . " (강도:" . $this->effect->getAmplifier() . ", 시간:" . $this->effect->getDuration() . ")";
+    return $this->getName() . " : " . $this->effect->getName() . " (강도:" . $this->effect->getAmplifier() . ", 시간:" . ($this->effect->getDuration() / 20) . ")";
   }
 
   public function jsonSerialize() : array{
