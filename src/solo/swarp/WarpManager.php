@@ -23,42 +23,6 @@ class WarpManager{
     $this->load();
   }
 
-  private function load(){
-    $this->warpsConfig = new Config($this->owner->getDataFolder() . "warps.yml", Config::YAML);
-    $warps = [];
-
-    foreach($this->warpsConfig->getAll() as $data){
-      $class = $data["class"];
-      unset($data["class"]);
-
-      if(!class_exists($class, true)){
-        $this->owner->getServer()->getLogger()->critical("[SWarp] " . $class . " 클래스를 찾을 수 없습니다.");
-        continue;
-      }else if($class !== Warp::class && !is_subclass_of($class, Warp::class)){
-        $this->owner->getServer()->getLogger()->critical("[SWarp] " . $class . " 클래스는 " . Warp::class . " 의 서브클래스가 아닙니다.");
-        continue;
-      }
-      $warp = $class::jsonDeserialize($data);
-
-      $warps[strtolower($warp->getName())] = $warp;
-    }
-    $this->warps = $warps;
-  }
-
-  public function save(){
-    if(empty($this->warps) || !$this->warpsConfig instanceof Config){
-      return;
-    }
-    $serializedData = [];
-    foreach($this->warps as $warp){
-      $data = $warp->jsonSerialize();
-      $data["class"] = get_class($warp);
-      $serializedData[] = $data;
-    }
-    $this->warpsConfig->setAll($serializedData);
-    $this->warpsConfig->save();
-  }
-
   public function addWarp(Warp $warp) : Warp{
     if(isset($this->warps[$name = strtolower($warp->getName())])){
       throw new WarpAlreadyExistsException("\"" . $name . "\" 이름의 워프는 이미 존재합니다");
@@ -97,5 +61,41 @@ class WarpManager{
 
     unset($this->warps[strtolower($warp)]);
     return $warpInstance;
+  }
+
+  private function load(){
+    $this->warpsConfig = new Config($this->owner->getDataFolder() . "warps.yml", Config::YAML);
+    $warps = [];
+
+    foreach($this->warpsConfig->getAll() as $data){
+      $class = $data["class"];
+      unset($data["class"]);
+
+      if(!class_exists($class, true)){
+        $this->owner->getServer()->getLogger()->critical("[SWarp] " . $class . " 클래스를 찾을 수 없습니다.");
+        continue;
+      }else if($class !== Warp::class && !is_subclass_of($class, Warp::class)){
+        $this->owner->getServer()->getLogger()->critical("[SWarp] " . $class . " 클래스는 " . Warp::class . " 의 서브클래스가 아닙니다.");
+        continue;
+      }
+      $warp = $class::jsonDeserialize($data);
+
+      $warps[strtolower($warp->getName())] = $warp;
+    }
+    $this->warps = $warps;
+  }
+
+  public function save(){
+    if(empty($this->warps) || !$this->warpsConfig instanceof Config){
+      return;
+    }
+    $serializedData = [];
+    foreach($this->warps as $warp){
+      $data = $warp->jsonSerialize();
+      $data["class"] = get_class($warp);
+      $serializedData[] = $data;
+    }
+    $this->warpsConfig->setAll($serializedData);
+    $this->warpsConfig->save();
   }
 }
