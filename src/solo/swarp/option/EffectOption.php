@@ -22,7 +22,7 @@ class EffectOption extends WarpOption{
       $effect->setAmplifier($amplification->getValue());
     }
     if($duration !== null){
-      $effect->setDuration($duration->getValue());
+      $effect->setDuration($duration->getValue() * 20);
     }
     $this->effect = $effect;
   }
