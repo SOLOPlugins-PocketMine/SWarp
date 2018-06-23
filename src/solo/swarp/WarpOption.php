@@ -16,16 +16,22 @@ abstract class WarpOption{
 
   }
 
-  public function jsonSerialize() : array{
-    return get_object_vars($this);
+  final public function jsonSerialize() : array{
+    return $this->dataSerialize();
   }
 
-  public static function jsonDeserialize(array $data) : WarpOption{
+  final public static function jsonDeserialize(array $data) : WarpOption{
     $option = static::createObject();
-    foreach($data as $key => $value){
-      $option->{$key} = $value;
-    }
+    $option->dataDeserialize($data);
     return $option;
+  }
+
+  protected function dataSerialize() : array{
+    return [];
+  }
+
+  protected function dataDeserialize(array $data) : void{
+
   }
 
   protected static function createObject() : WarpOption{

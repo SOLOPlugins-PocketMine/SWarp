@@ -14,7 +14,7 @@ class TitleOption extends WarpOption{
   private $titleMessage;
 
   public function __construct(ArgumentString ...$args){
-    $this->subTitleMessage = implode(" ", $args);
+    $this->titleMessage = implode(" ", $args);
   }
 
   public function getName() : string{
@@ -29,17 +29,13 @@ class TitleOption extends WarpOption{
     return $this->getName() . " : " . $this->titleMessage;
   }
 
-  /*
-  public function jsonSerialize() : array{
-    $data = parent::jsonSerialize();
-    $data["titleMessage"] = $this->titleMessage;
-    return $data;
+  protected function dataSerialize() : array{
+    return [
+      "titleMessage" => $this->titleMessage
+    ];
   }
 
-  public static function jsonDeserialize(array $data) : WarpOption{
-    $option = parent::jsonDeserialize($data);
-    $option->titleMessage = $data["titleMessage"];
-    return $option;
+  protected function dataDeserialize(array $data) : void{
+    $this->titleMessage = $data["titleMessage"];
   }
-  */
 }

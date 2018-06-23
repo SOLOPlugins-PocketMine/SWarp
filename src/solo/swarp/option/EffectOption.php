@@ -40,23 +40,21 @@ class EffectOption extends WarpOption{
     return $this->getName() . " : " . $this->effect->getName() . " (강도:" . $this->effect->getAmplifier() . ", 시간:" . ($this->effect->getDuration() / 20) . ")";
   }
 
-  public function jsonSerialize() : array{
-    $data = parent::jsonSerialize();
-    $data["effectId"] = $this->effect->getId();
-    $data["effectAmplifier"] = $this->effect->getAmplifier();
-    $data["effectDuration"] = $this->effect->getDuration();
-    return $data;
+  protected function dataSerialize() : array{
+    return [
+      "effectId" => $this->effect->getId(),
+      "effectAmplifier" => $this->effect->getAmplifier(),
+      "effectDuration" => $this->effect->getDuration()
+    ];
   }
 
-  public static function jsonDeserialize(array $data) : WarpOption{
-    $option = static::createObject();
-    $option->effect = Effect::getEffect($data["effectId"]);
+  protected function dataDeserialize(array $data) : void{
+    $this->effect = Effect::getEffect($data["effectId"]);
     if(isset($data["effectAmplifier"])){
-      $option->effect->setAmplifier($data["effectAmplifier"]);
+      $this->effect->setAmplifier($data["effectAmplifier"]);
     }
     if(isset($data["effectDuration"])){
-      $option->effect->setDuration($data["effectDuration"]);
+      $this->effect->setDuration($data["effectDuration"]);
     }
-    return $option;
   }
 }

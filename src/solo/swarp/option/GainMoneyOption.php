@@ -31,17 +31,13 @@ class GainMoneyOption extends WarpOption{
     return $this->getName() . " : " . $this->cost;
   }
 
-  /*
-  public function jsonSerialize() : array{
-    $data = parent::jsonSerialize();
-    $data["cost"] = $this->cost;
-    return $data;
+  protected function dataSerialize() : array{
+    return [
+      "amount" => $this->amount
+    ];
   }
 
-  public static function jsonDeserialize(array $data) : WarpOption{
-    $option = parent::jsonDeserialize($data);
-    $option->cost = $data["cost"];
-    return $option;
+  protected function dataDeserialize(array $data) : void{
+    $this->amount = $data["amount"];
   }
-  */
 }

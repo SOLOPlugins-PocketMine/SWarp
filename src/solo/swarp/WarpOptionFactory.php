@@ -16,11 +16,7 @@ use solo\swarp\option\RandomDestinationOption;
 use solo\swarp\option\SubTitleOption;
 use solo\swarp\option\TitleOption;
 
-class WarpOptionFactory{
-
-  private function __construct(){
-
-  }
+abstract class WarpOptionFactory{
 
   private static $warpOptionClasses = [];
 
@@ -47,12 +43,11 @@ class WarpOptionFactory{
     self::registerWarpOption(GainMoneyOption::class);
   }
 
-  public static function parseOptions(string $input) : array{
+  private static function parseString(string $input) : array{
     $args = explode(" ", $input);
-
     $options = [];
-
     $index = 0;
+
     while($index < count($args)){
       if(substr($args[$index], 0, 1) == "-"){
         $optionName = substr($args[$index], 1);
@@ -60,64 +55,62 @@ class WarpOptionFactory{
         while(substr($args[$index + 1] ?? "-", 0, 1) != "-"){
           $optionArgs[] = $args[++$index];
         }
-
-        $optionClass = self::getWarpOption($optionName);
-        if($optionClass === null || !class_exists($optionClass, true)){
-          throw new \InvalidArgumentException("\"" . $optionName . "\" 옵션은 존재하지 않습니다.");
-        }
-
-        $constructor = (new \ReflectionClass($optionClass))->getConstructor();
-        $parameters = $constructor->getParameters();
-        $optionInvokeArgs = [];
-
-        $usage = "사용법 : -" . $optionName . " " . implode(" ", array_map(function($parameter){
-          if($parameter->isOptional()){
-            return "[" . $parameter->getName() . "]";
-          }else{
-            return "<" . $parameter->getName() . ">";
-          }
-        }, $parameters));
-
-        while(true){
-          // Parameters iterate
-          if(!isset($parameter) || !$parameter->isVariadic()){
-            $parameter = array_shift($parameters);
-            if($parameter === null){
-              break;
-            }
-          }
-
-          // optionArgs iterate
-          $argInput = array_shift($optionArgs);
-
-          if($argInput === null){
-            if($parameter->isVariadic() && count($optionInvokeArgs) > 0){
-              throw new \InvalidArgumentException($optionName . ": 입력 값이 부족합니다. " . $usage);
-            }
-            if($parameter->isOptional()){
-              continue;
-            }
-            throw new \InvalidArgumentException($optionName . ": 입력 값이 부족합니다. " . $usage);
-          }
-          $argClass = $parameter->getClass()->getName();
-
-          try{
-            $argObject = new $argClass($argInput);
-          }catch(\InvalidArgumentException $e){
-            throw new \InvalidArgumentException($optionName . ": " . $parameter->getName() . " " . $e->getMessage() . " " . $usage);
-          }
-
-          $optionInvokeArgs[] = $argObject;
-        }
-
-        try{
-          $optionInstance = new $optionClass(...$optionInvokeArgs);
-        }catch(\InvalidArgumentException $e){
-          throw new \InvalidArgumentException($optionName . ": " . $e->getMessage());
-        }
-        $options[$optionInstance->getName()] = $optionInstance;
+        $options[$optionName] = $optionArgs;
       }
-      $index++;
+      ++$index;
+    }
+    return $options;
+  }
+
+  public static function parseOptions(string $input) : array{
+    $options = [];
+    foreach(self::parseString($input) as $name => $args){
+      $class = self::getWarpOption($name);
+      if($class === null){
+        throw new \InvalidArgumentException("\"" . $name . "\" 옵션은 존재하지 않습니다.");
+      }
+
+      $parameters = (new \ReflectionClass($class))->getConstructor()->getParameters();
+      $arguments = [];
+
+      $usage = "사용법 : -" . $name . " " . implode(" ", array_map(function($parameter){
+        if($parameter->isOptional()){
+          return "[" . $parameter->getName() . "]";
+        }else{
+          return "<" . $parameter->getName() . ">";
+        }
+      }, $parameters));
+
+      $parameter = null;
+      while(!empty($parameters) || !empty($args)){
+        if($parameter === null || !$parameter->isVariadic()){
+          $parameter = array_shift($parameters);
+        }
+        if($parameter === null){
+          throw new \InvalidArgumentException($name . ": 입력 값이 너무 많습니다. " . $usage);
+        }
+
+        $arg = array_shift($args);
+        if($arg === null){
+          if(!$parameter->isOptional() || ($parameter->isVariadic() && empty($arguments))){
+            throw new \InvalidArgumentException($name . ": 입력 값이 부족합니다. " . $usage);
+          }
+        }
+
+        $argumentClass = $parameter->getClass()->getName();
+        try{
+          $arguments[] = new $argumentClass($arg);
+        }catch(\InvalidArgumentException $e){
+          throw new \InvalidArgumentException($name . ": " . $parameter->getName() . " " . $e->getMessage() . " " . $usage);
+        }
+      }
+
+      try{
+        $option = new $class(...$arguments);
+      }catch(\InvalidArgumentException $e){
+        throw new \InvalidArgumentException($optionName . ": " . $e->getMessage());
+      }
+      $options[$option->getName()] = $option;
     }
     return $options;
   }

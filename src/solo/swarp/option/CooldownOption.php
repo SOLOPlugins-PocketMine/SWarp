@@ -39,24 +39,24 @@ class CooldownOption extends WarpOption{
     return $this->getName() . " : " . $this->cooldown . "초";
   }
 
-  /*
-  public function jsonSerialize() : array{
-    $data = parent::jsonSerialize();
-    $data["cooldown"] = $this->cooldown;
-    $data["cooldownList"] = $this->cooldownList;
-    return $data;
-  }
-  */
-
-  public static function jsonDeserialize(array $data) : WarpOption{
-    $option = static::createObject();
-    $option->cooldown = $data["cooldown"];
-    $option->cooldownList = $data["cooldownList"];
-    foreach($option->cooldownList as $name => $time){
-      if(time() - $time > $option->cooldown){
-        unset($option->cooldownList[$name]);
+  private function cleanupCooldownList(){
+    foreach($this->cooldownList as $name => $time){
+      if(time() - $time > $this->cooldown){
+        unset($this->cooldownList[$name]);
       }
     }
-    return $option;
+  }
+
+  protected function dataSerialize() : array{
+    $this->cleanupCooldownList();
+    return [
+      "cooldown" => $this->cooldown,
+      "cooldownList" => $this->cooldownList
+    ];
+  }
+
+  protected function dataDeserialize(array $data) : void{
+    $this->cooldown = $data["cooldown"];
+    $this->cooldownList = $data["cooldownList"];
   }
 }

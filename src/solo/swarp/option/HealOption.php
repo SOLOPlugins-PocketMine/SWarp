@@ -31,17 +31,13 @@ class HealOption extends WarpOption{
     return $this->getName() . " : " . $this->heal;
   }
 
-  /*
-  public function jsonSerialize() : array{
-    $data = parent::jsonSerialize();
-    $data["heal"] = $this->heal;
-    return $data;
+  protected function dataSerialize() : array{
+    return [
+      "heal" => $this->heal
+    ];
   }
 
-  public static function jsonDeserialize(array $data) : WarpOption{
-    $option = parent::jsonDeserialize($data);
-    $option->heal = $data["heal"];
-    return $option;
+  protected function dataDeserialize(array $data) : void{
+    $this->heal = $data["heal"];
   }
-  */
 }

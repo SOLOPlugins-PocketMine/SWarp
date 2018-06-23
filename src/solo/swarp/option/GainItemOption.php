@@ -48,15 +48,15 @@ class GainItemOption extends WarpOption{
     return $this->getName() . " : " . implode(", ", $this->items);
   }
 
-  public function jsonSerialize() : array{
-    $data = parent::jsonSerialize();
-    $data["items"] = array_map(function($item){ return $item->jsonSerialize(); }, $this->items);
-    return $data;
+  protected function dataSerialize() : array{
+    return [
+      "items" => array_map(function($item){ return $item->jsonSerialize(); }, $this->items)
+    ];
   }
 
-  public static function jsonDeserialize(array $data) : WarpOption{
-    $option = static::createObject();
-    $option->items = array_map(function($itemSerialized){ return Item::jsonDeserialize($itemSerialized); }, $data["items"]);
-    return $option;
+  protected function dataDeserialize(array $data) : void{
+    $this->items = array_map(function($itemSerialized){
+      return Item::jsonDeserialize($itemSerialized);
+    }, $data["items"]);
   }
 }

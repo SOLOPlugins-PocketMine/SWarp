@@ -37,17 +37,13 @@ class DamageOption extends WarpOption{
     return $this->getName() . " : " . $this->damage;
   }
 
-  /*
-  public function jsonSerialize() : array{
-    $data = parent::jsonSerialize();
-    $data["damage"] = $this->damage;
-    return $data;
+  protected function dataSerialize() : array{
+    return [
+      "damage" => $this->damage
+    ];
   }
 
-  public static function jsonDeserialize(array $data) : WarpOption{
-    $option = parent::jsonDeserialize($data);
-    $option->damage = $data["damage"];
-    return $option;
+  protected function dataDeserialize(array $data) : void{
+    $this->damage = $data["damage"];
   }
-  */
 }
