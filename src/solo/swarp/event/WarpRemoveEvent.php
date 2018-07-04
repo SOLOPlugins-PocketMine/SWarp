@@ -6,6 +6,6 @@ use pocketmine\event\Cancellable;
 
 class WarpRemoveEvent extends WarpEvent implements Cancellable{
 
-  public static $handlerList = null;
+    public static $handlerList = null;
 
 }

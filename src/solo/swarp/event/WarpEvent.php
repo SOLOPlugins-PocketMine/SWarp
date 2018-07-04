@@ -7,13 +7,13 @@ use solo\swarp\Warp;
 
 abstract class WarpEvent extends Event{
 
-  protected $warp;
+    protected $warp;
 
-  public function __construct(Warp $warp){
-    $this->warp = $warp;
-  }
+    public function __construct(Warp $warp){
+        $this->warp = $warp;
+    }
 
-  public function getWarp(){
-    return $this->warp;
-  }
+    public function getWarp(){
+        return $this->warp;
+    }
 }

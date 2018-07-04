@@ -10,31 +10,31 @@ use solo\swarp\Warp;
 
 class PlayerWarpEvent extends WarpEvent implements Cancellable{
 
-  public static $handlerList = null;
+    public static $handlerList = null;
 
-  protected $player;
+    protected $player;
 
-  protected $destination;
+    protected $destination;
 
-  public function __construct(Warp $warp, Player $player, Position $destination){
-    parent::__construct($warp);
-    $this->player = $player;
-    $this->destination = $destination;
-  }
+    public function __construct(Warp $warp, Player $player, Position $destination){
+        parent::__construct($warp);
+        $this->player = $player;
+        $this->destination = $destination;
+    }
 
-  public function getWarp() : Warp{
-    return $this->warp;
-  }
+    public function getWarp() : Warp{
+        return $this->warp;
+    }
 
-  public function getPlayer() : Player{
-    return $this->player;
-  }
+    public function getPlayer() : Player{
+        return $this->player;
+    }
 
-  public function getDestination() : Position{
-    return $this->destination;
-  }
+    public function getDestination() : Position{
+        return $this->destination;
+    }
 
-  public function setDestination(Position $destination){
-    $this->destination = $destination;
-  }
+    public function setDestination(Position $destination){
+        $this->destination = $destination;
+    }
 }
