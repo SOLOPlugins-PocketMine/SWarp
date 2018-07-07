@@ -43,10 +43,10 @@ class Warp extends Vector3{
     }
 
     public function warp(Player $player, bool $force = false){
+    	if(!$this->isLevelLoaded($this->level) && !$this->loadLevel($this->level)){
+            throw new WarpException($this->level . " 은 존재하지 않는 월드입니다.");
+    	}
         $level = Server::getInstance()->getLevelByName($this->level);
-        if($level === null || $level->isClosed()){
-            throw new WarpException($this->level . " 은 로드되지 않았거나 존재하지 않는 월드입니다.");
-        }
         $event = new PlayerWarpEvent($this, $player, new Position($this->x, $this->y, $this->z, $level));
 
         foreach($this->options as $option){
