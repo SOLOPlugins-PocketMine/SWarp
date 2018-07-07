@@ -14,17 +14,17 @@
 <br>
 
 ## 명령어
-|명령어|퍼미션|설명|
+|명령어|퍼미션|기본값|설명|
 |-|-|-|
-|`/워프 <워프명>`|swarp.command.warp|해당 워프로 이동합니다.|
-|`/워프생성 <워프명> [옵션...]`|swarp.command.create|워프를 생성합니다.|
-|`/워프성명 <워프명> <설명...>`|swarp.command.setdescription|워프의 설명을 설정합니다. 설명은 워프목록에서 표시됩니다.|
-|`/워프정보 <워프명>`|swarp.command.info|워프에 설정된 값이나 옵션을 표시합니다.|
-|`/워프목록 [페이지...]`|swarp.command.list|생성된 워프 목록을 표시합니다.|
-|`/워프옵션 <워프명> <옵션...>`|swarp.command.setoptions|워프의 옵션을 재설정합니다.|
-|`/워프권한 <워프명> <권한>`|swarp.command.setpermission|워프의 권한을 설정합니다.|
-|`/워프삭제 <워프명>`|swarp.command.remove|워프를 삭제합니다.|
-|`/월드이동 <월드명>`|swarp.command.worldmove|해당 월드로 이동합니다.|
+|`/워프 <워프명>`|swarp.command.warp|ALL|해당 워프로 이동합니다.|
+|`/워프생성 <워프명> [옵션...]`|swarp.command.create|OP|워프를 생성합니다.|
+|`/워프성명 <워프명> <설명...>`|swarp.command.setdescription|OP|워프의 설명을 설정합니다. 설명은 워프목록에서 표시됩니다.|
+|`/워프정보 <워프명>`|swarp.command.info|OP|워프에 설정된 값이나 옵션을 표시합니다.|
+|`/워프목록 [페이지...]`|swarp.command.list|ALL|생성된 워프 목록을 표시합니다.|
+|`/워프옵션 <워프명> <옵션...>`|swarp.command.setoptions|OP|워프의 옵션을 재설정합니다.|
+|`/워프권한 <워프명> <권한>`|swarp.command.setpermission|OP|워프의 권한을 설정합니다.|
+|`/워프삭제 <워프명>`|swarp.command.remove|OP|워프를 삭제합니다.|
+|`/월드이동 <월드명>`|swarp.command.worldmove|OP|해당 월드로 이동합니다.|
 
 <br>
 
