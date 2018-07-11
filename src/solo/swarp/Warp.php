@@ -43,16 +43,17 @@ class Warp extends Vector3{
     }
 
     public function warp(Player $player, bool $force = false){
-    	if(!$this->isLevelLoaded($this->level) && !$this->loadLevel($this->level)){
+        $server = Server::getInstance();
+    	if(!$server->isLevelLoaded($this->level) && !$server->loadLevel($this->level)){
             throw new WarpException($this->level . " 은 존재하지 않는 월드입니다.");
     	}
-        $level = Server::getInstance()->getLevelByName($this->level);
+        $level = $server->getLevelByName($this->level);
         $event = new PlayerWarpEvent($this, $player, new Position($this->x, $this->y, $this->z, $level));
 
         foreach($this->options as $option){
             $option->test($event);
         }
-        Server::getInstance()->getPluginManager()->callEvent($event);
+        $server->getPluginManager()->callEvent($event);
         if($event->isCancelled() && $false !== true){
             throw new WarpException("워프에 실패하였습니다.");
         }
@@ -145,18 +146,20 @@ class Warp extends Vector3{
         $warp->description = $data["description"];
         $warp->permission = $data["permission"];
 
+        $server = Server::getInstance();
         $options = [];
+
         foreach($data["options"] as $optionName => $optionData){
             $optionClass = WarpOptionFactory::getWarpOption($optionName);
 
             if($optionClass === null){
-                Server::getInstance()->getLogger()->critical("[SWarp] \"" . $optionName . "\" 옵션을 찾을 수 없습니다.");
+                $server->getLogger()->critical("[SWarp] \"" . $optionName . "\" 옵션을 찾을 수 없습니다.");
                 continue;
             }else if(!class_exists($optionClass, true)){
-                Server::getInstance()->getLogger()->critical("[SWarp] " . $optionClass . " 클래스를 찾을 수 없습니다.");
+                $server->getLogger()->critical("[SWarp] " . $optionClass . " 클래스를 찾을 수 없습니다.");
                 continue;
             }else if(!is_subclass_of($optionClass, WarpOption::class)){
-                Server::getInstance()->getLogger()->critical("[SWarp] " . $optionClass . " 클래스는 " . WarpOption::class . " 의 서브클래스가 아닙니다.");
+                $server->getLogger()->critical("[SWarp] " . $optionClass . " 클래스는 " . WarpOption::class . " 의 서브클래스가 아닙니다.");
                 continue;
             }
 
