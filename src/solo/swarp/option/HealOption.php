@@ -23,7 +23,7 @@ class HealOption extends WarpOption{
     }
 
     public function apply(PlayerWarpEvent $event){
-        $event->getPlayer()->attack(new EntityRegainHealthEvent($event->getPlayer(), $this->heal, EntityRegainHealthEvent::CAUSE_MAGIC));
+        $event->getPlayer()->heal(new EntityRegainHealthEvent($event->getPlayer(), $this->heal, EntityRegainHealthEvent::CAUSE_MAGIC));
         $event->getPlayer()->sendMessage(SWarp::$prefix . "워프하여 체력이 " . $this->heal . " 만큼 회복되었습니다");
     }
 
