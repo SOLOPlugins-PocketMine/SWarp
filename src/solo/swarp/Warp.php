@@ -48,20 +48,20 @@ class Warp extends Vector3{
             throw new WarpException($this->level . " 은 존재하지 않는 월드입니다.");
     	}
         $level = $server->getLevelByName($this->level);
-        $event = new PlayerWarpEvent($this, $player, new Position($this->x, $this->y, $this->z, $level));
+        $ev = new PlayerWarpEvent($this, $player, new Position($this->x, $this->y, $this->z, $level));
 
         foreach($this->options as $option){
-            $option->test($event);
+            $option->test($ev);
         }
-        $server->getPluginManager()->callEvent($event);
-        if($event->isCancelled() && $false !== true){
+        $ev->call();
+        if($ev->isCancelled() && $false !== true){
             throw new WarpException("워프에 실패하였습니다.");
         }
 
         foreach($this->options as $option){
-            $option->apply($event);
+            $option->apply($ev);
         }
-        $player->teleport($event->getDestination());
+        $player->teleport($ev->getDestination());
     }
 
     public function hasDescription() : bool{
@@ -104,7 +104,7 @@ class Warp extends Vector3{
 
     public function setOptions(array $options) : Warp{
         $this->options = $options;
-        Server::getInstance()->getPluginManager()->callEvent(new WarpOptionUpdateEvent($this));
+        (new WarpOptionUpdateEvent($this))->call();
         return $this;
     }
 

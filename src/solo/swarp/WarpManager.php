@@ -27,7 +27,8 @@ class WarpManager{
         if(isset($this->warps[$name = strtolower($warp->getName())])){
             throw new WarpAlreadyExistsException("\"" . $name . "\" 이름의 워프는 이미 존재합니다");
         }
-        $this->owner->getServer()->getPluginManager()->callEvent($ev = new WarpCreateEvent($warp));
+        $ev = new WarpCreateEvent($warp);
+        $ev->call();
         if($ev->isCancelled()){
             throw new WarpException("워프 생성에 실패하였습니다");
         }
@@ -53,7 +54,8 @@ class WarpManager{
         }
         $warpInstance = $this->warps[$warp];
 
-        $this->owner->getServer()->getPluginManager()->callEvent($ev = new WarpRemoveEvent($warpInstance));
+        $ev = new WarpRemoveEvent($warpInstance);
+        $ev->call();
         if($ev->isCancelled()){
             throw new WarpException("워프 제거에 실패하였습니다");
         }
